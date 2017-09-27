@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import org.apache.commons.io.FilenameUtils;
+
 
 public class BlockImage {
     private final String imageLocation = "BlockImages";
@@ -33,16 +35,10 @@ public class BlockImage {
         this.image = image;
     }
 
-    public ArrayList<BlockImage> getListOfBlockImages() {
-        return listOfBlockImages;
-    }
 
-    public void setListOfBlockImages(ArrayList<BlockImage> listOfBlockImages) {
-        this.listOfBlockImages = listOfBlockImages;
-    }
 
     Image image;
-    private ArrayList<BlockImage> listOfBlockImages=setBlockImagesFromDirectory();
+
 
 
     public void create(String name,Image image){
@@ -52,6 +48,7 @@ public class BlockImage {
 
     public void createRandom(){
         Random rand = new Random();
+        ArrayList<BlockImage> listOfBlockImages = getBlockImagesFromDirectory();
         int n = rand.nextInt(listOfBlockImages.size());
         //this is horribly wrong but I see no two ways about it
         this.name =  listOfBlockImages.get(n).getName();
@@ -59,19 +56,20 @@ public class BlockImage {
     }
 
 
-    private ArrayList<BlockImage> setBlockImagesFromDirectory() {
-        File folder = new File("./"+imageLocation);
+    private ArrayList<BlockImage> getBlockImagesFromDirectory() {
+        File folder = new File("src/main/resources/");
+
         ArrayList<BlockImage> listOfBlockImages = new ArrayList<BlockImage>();
         File[] listOfFiles = folder.listFiles();
         for (int i = 0; i < listOfFiles.length; i++) {
-            if (listOfFiles[i].isFile()) { //too lazy to consider extensions yet to identify images
-                System.out.println("File " + listOfFiles[i].getName());
-                String imageName = listOfFiles[i].getName();
-                Image image = new Image(getClass().getResource(imageName).toExternalForm());
+
+            if (listOfFiles[i].isFile() && FilenameUtils.getExtension(listOfFiles[i].toString()).equals("png")) {
+                Image image = new Image(getClass().getResource(listOfFiles[i].getName()).toExternalForm());
                 BlockImage blockImage = new BlockImage();
-                blockImage.create(imageName,image);
+                blockImage.create(listOfFiles[i].getName(),image);
                 listOfBlockImages.add(blockImage);
             }
+
         }
         return listOfBlockImages;
     }

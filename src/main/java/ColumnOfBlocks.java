@@ -7,7 +7,7 @@ public class ColumnOfBlocks {
 
     int positionInRowOfColumns;
 
-    ArrayList<Block> containingBlocks;
+    private ArrayList<Block> containingBlocks = new ArrayList<Block>();
 
     public int getPositionInRowOfColumns() {
         return positionInRowOfColumns;

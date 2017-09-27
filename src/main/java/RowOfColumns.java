@@ -7,7 +7,7 @@ public class RowOfColumns {
 
 
 
-    ArrayList<ColumnOfBlocks> containingColumns;
+    private ArrayList<ColumnOfBlocks> containingColumns = new ArrayList<ColumnOfBlocks>();
 
     public void addColumnOfBlocks(ColumnOfBlocks columnOfBlocks){
         this.containingColumns.add(columnOfBlocks);

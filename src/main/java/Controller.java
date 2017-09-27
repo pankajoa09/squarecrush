@@ -5,8 +5,9 @@ import javafx.stage.Stage;
  */
 public class Controller {
 
+    View view = new View();
 
     public void startApplication(Stage primaryStage){
-        view.initializeStage();
+        view.initializeStage(primaryStage);
     }
 }
