@@ -26,13 +26,22 @@ public class ColumnOfBlocks {
     }
 
 
-
     public void addBlock(Block block){
         this.containingBlocks.add(block);
     }
 
     public void removeBlock(Block block){
         this.containingBlocks.remove(block);
+    }
+
+    public Block getBlock(int positionInColumn){
+        Block block = new Block();
+        for (Block blk : this.containingBlocks){
+            if (blk.getPositionInColumn() == positionInColumn){
+                block = blk;
+            }
+        }
+        return block;
     }
 
 

@@ -10,4 +10,9 @@ public class Controller {
     public void startApplication(Stage primaryStage){
         view.initializeStage(primaryStage);
     }
+
+
+    public void rectangleBlockClickHandler(int columnNumber, int positionInColumn, RowOfColumns rowOfColumns){
+        System.out.println(columnNumber+" "+ positionInColumn);
+    }
 }

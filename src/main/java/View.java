@@ -1,6 +1,8 @@
 import com.sun.imageio.plugins.gif.GIFImageReader;
 import com.sun.rowset.internal.Row;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.ImagePattern;
@@ -25,6 +27,7 @@ public class View {
     private final static int WIDTH = 5;
     private final static int HEIGHT = 5;
     private final static int BLOCK_RECTANGLE_SIZE = 80;
+    private final static int BLOCK_IMAGE_POOL_SIZE = 2;
 
     Debug debug = new Debug();
 
@@ -48,7 +51,7 @@ public class View {
             ColumnOfBlocks columnOfBlocks = new ColumnOfBlocks();
             for (int j=0; j<HEIGHT; j++){
                 Block block = new Block();
-                block.createRandomBlock(i,j);
+                block.createRandomBlock(i,j,BLOCK_IMAGE_POOL_SIZE);
                 columnOfBlocks.addBlock(block);
             }
             rowOfColumns.addColumnOfBlocks(columnOfBlocks);
@@ -67,7 +70,7 @@ public class View {
         GridPane rowOfColumnsPane = new GridPane();
         int index=0;
         for (ColumnOfBlocks columnOfBlocks: rowOfColumns.getContainingColumns()){
-            GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks);
+            GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks, rowOfColumns);
             rowOfColumnsPane.setRowIndex(columnOfBlocksPane,index);
             rowOfColumnsPane.getChildren().addAll(columnOfBlocksPane);
             index++;
@@ -76,11 +79,11 @@ public class View {
         return rowOfColumnsPane;
     }
 
-    public GridPane refreshColumnOfBlocksPane(ColumnOfBlocks columnOfBlocks){
+    public GridPane refreshColumnOfBlocksPane(ColumnOfBlocks columnOfBlocks, RowOfColumns rowOfColumns){
         GridPane columnOfBlocksPane = new GridPane();
         int index = 0;
         for (Block block: columnOfBlocks.getContainingBlocks()){
-            Rectangle blockRectangle = refreshBlockRectangle(block);
+            Rectangle blockRectangle = refreshBlockRectangle(block,rowOfColumns);
             columnOfBlocksPane.setColumnIndex(blockRectangle,index);
             columnOfBlocksPane.getChildren().addAll(blockRectangle);
             index++;
@@ -89,11 +92,20 @@ public class View {
     }
 
 
-    public Rectangle refreshBlockRectangle(Block block){
+    public Rectangle refreshBlockRectangle(Block block, final RowOfColumns rowOfColumns){
+        final int columnNumber = block.getColumnNumber();
+        final int positionInColumn = block.getPositionInColumn();
         Rectangle blockRectangle = new Rectangle();
         blockRectangle.setHeight(BLOCK_RECTANGLE_SIZE);
         blockRectangle.setWidth(BLOCK_RECTANGLE_SIZE);
         blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
+        blockRectangle.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent t) {
+                Controller controller = new Controller();
+                controller.rectangleBlockClickHandler(columnNumber,positionInColumn,rowOfColumns);
+
+            }
+        });
         return blockRectangle;
     }
 

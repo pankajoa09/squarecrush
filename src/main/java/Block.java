@@ -16,16 +16,16 @@ public class Block {
 
 
 
-    private int positionNumberInColumn; //or row
-    private int columnNumber;
+    private int positionInColumn; // j
+    private int columnNumber; // i
     private BlockImage blockImage;
 
-    public int getPositionNumberInColumn() {
-        return positionNumberInColumn;
+    public int getPositionInColumn() {
+        return positionInColumn;
     }
 
-    public void setPositionNumberInColumn(int positionNumberInColumn) {
-        this.positionNumberInColumn = positionNumberInColumn;
+    public void setPositionInColumn(int positionInColumn) {
+        this.positionInColumn = positionInColumn;
     }
 
     public int getColumnNumber() {
@@ -45,19 +45,22 @@ public class Block {
     }
 
 
-    public void createBlock(int columnNumber, int positionNumberInColumn, BlockImage blockImage) {
+    public void createBlock(int columnNumber, int positionInColumn, BlockImage blockImage) {
         this.columnNumber = columnNumber;
-        this.positionNumberInColumn = positionNumberInColumn;
+        this.positionInColumn = positionInColumn;
         this.blockImage = blockImage;
     }
 
-    public void createRandomBlock(int columnNumber,int positionNumberInColumn){
+    public void createRandomBlock(int columnNumber,int positionInColumn,int blockImagePoolSize){
         this.columnNumber = columnNumber;
-        this.positionNumberInColumn = positionNumberInColumn;
+        this.positionInColumn = positionInColumn;
         BlockImage blockImage = new BlockImage();
-        blockImage.createRandom();
+        blockImage.createRandom(blockImagePoolSize);
         this.blockImage = blockImage;
     }
+
+
+
 
 
 

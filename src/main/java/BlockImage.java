@@ -46,9 +46,10 @@ public class BlockImage {
         this.image = image;
     }
 
-    public void createRandom(){
+    //blockImagePoolSize is how many images to choose. Less makes it easier.
+    public void createRandom(int blockImagePoolSize){
         Random rand = new Random();
-        ArrayList<BlockImage> listOfBlockImages = getBlockImagesFromDirectory();
+        ArrayList<BlockImage> listOfBlockImages = getBlockImagesFromDirectory(blockImagePoolSize);
         int n = rand.nextInt(listOfBlockImages.size());
         //this is horribly wrong but I see no two ways about it
         this.name =  listOfBlockImages.get(n).getName();
@@ -56,18 +57,21 @@ public class BlockImage {
     }
 
 
-    private ArrayList<BlockImage> getBlockImagesFromDirectory() {
+    private ArrayList<BlockImage> getBlockImagesFromDirectory(int blockImagePoolSize) {
         File folder = new File("src/main/resources/");
 
         ArrayList<BlockImage> listOfBlockImages = new ArrayList<BlockImage>();
         File[] listOfFiles = folder.listFiles();
         for (int i = 0; i < listOfFiles.length; i++) {
-
-            if (listOfFiles[i].isFile() && FilenameUtils.getExtension(listOfFiles[i].toString()).equals("png")) {
+            if (blockImagePoolSize==0){
+                break;
+            }
+            else if (listOfFiles[i].isFile() && FilenameUtils.getExtension(listOfFiles[i].toString()).equals("png")) {
                 Image image = new Image(getClass().getResource(listOfFiles[i].getName()).toExternalForm());
                 BlockImage blockImage = new BlockImage();
                 blockImage.create(listOfFiles[i].getName(),image);
                 listOfBlockImages.add(blockImage);
+                blockImagePoolSize--;
             }
 
         }
