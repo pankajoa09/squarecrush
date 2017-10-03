@@ -26,7 +26,28 @@ public class RowOfColumns {
     }
 
     public Block getBlock(int columnNumber, int positionInColumn){
-        return getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
+        Debug debug = new Debug();
+
+        Block block = new Block();
+        int rowSize = this.getContainingColumns().size();
+        Boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
+        if (matchesColumnNumberConstraint) {
+            int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
+            Boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
+            if (matchesPositionInColumnConstraint) {
+                block = getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
+
+
+            } else {
+
+                block.createRandomBlock(-100, -100, 3);
+            }
+        }
+        else{
+
+            block.createRandomBlock(-100,-100,3);
+        }
+        return block;
     }
 
     public ColumnOfBlocks getColumnOfBlocks(int columnNumber){
@@ -42,19 +63,19 @@ public class RowOfColumns {
 
 
     public Block getNorthBlock(Block block){
-        return getBlock(block.getColumnNumber()-1,block.getPositionInColumn());
+        return getBlock(block.getColumnNumber(),block.getPositionInColumn()-1);
     }
 
     public Block getEastBlock(Block block){
+        return getBlock(block.getColumnNumber()-1,block.getPositionInColumn());
+    }
+
+    public Block getSouthBlock(Block block) {
         return getBlock(block.getColumnNumber(),block.getPositionInColumn()+1);
     }
 
-    public Block getSouthBlock(Block block){
+    public Block getWestBlock(Block block) {
         return getBlock(block.getColumnNumber()+1,block.getPositionInColumn());
-    }
-
-    public Block getWestBlock(Block block){
-        return getBlock(block.getColumnNumber(),block.getPositionInColumn()-1);
     }
 
 
