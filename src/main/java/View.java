@@ -34,7 +34,8 @@ public class View {
     private final GridPane mainGridPane = new GridPane();
     private final static int MAX_OBJECTS = 3;
     private final static int WIDTH = 5;
-    private final static int HEIGHT = 5;
+    private final static int HEIGHT = 10;
+    private final static int TRUE_HEIGHT = 5;
     private final static int BLOCK_RECTANGLE_SIZE = 80;
     private final static int BLOCK_IMAGE_POOL_SIZE = 2;
     private Timeline timeline;
@@ -52,11 +53,19 @@ public class View {
 
     public void initializeStage(RowOfColumns rowOfColumns){
 
+        primaryStage.setHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
+        primaryStage.setMaxHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
+        primaryStage.setMinHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
+        primaryStage.setWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
+        primaryStage.setMaxWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
+        primaryStage.setMinWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
+
         GridPane rowOfColumnsPane = refreshRowOfColumnsPane(rowOfColumns);
-        mainGridPane.add(rowOfColumnsPane,1,1);
+        mainGridPane.add(rowOfColumnsPane,2,2);
+        mainGridPane.setTranslateY(-200);
         stackPane.getChildren().clear();
         stackPane.getChildren().addAll(mainGridPane);
-        Scene scene = new Scene(stackPane, WIDTH*BLOCK_RECTANGLE_SIZE, HEIGHT*BLOCK_RECTANGLE_SIZE);
+        Scene scene = new Scene(stackPane, WIDTH*BLOCK_RECTANGLE_SIZE, TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE+10);
         primaryStage.setTitle("CRUSHMEH");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -64,7 +73,14 @@ public class View {
 
 
 
-
+    public void hey(Animated animated){
+        ArrayList<Block> thewater = animated.getToPlaceOnTop();
+        for (Block jasmine : thewater) {
+            animated.getRowOfColumns().addBlock(jasmine);
+        }
+        mainGridPane.getChildren().clear();
+        mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),1,1);
+    }
 
 
 
@@ -151,34 +167,35 @@ public class View {
     }
 
 
+
     public void animator(Animated animated){
         System.out.println("ANIMATOR CALLED");
         ArrayList<Block> fadeOuts = animated.getToFade();
         ArrayList<Block> fallDowns = animated.getToMoveDown();
         ArrayList<Block> toPlaceOnTops = animated.getToPlaceOnTop();
         fallDowns.addAll(toPlaceOnTops);
-
+        //hey(animated);
         for (Block fade: fadeOuts){
 
             int pos = fade.getPositionInColumn();
             int col = fade.getColumnNumber();
             fade(getRectangle(pos,col));
         }
-        
+
         for (Block fall : fallDowns){
             int howMuch = howManyFadedBelow(fadeOuts,fall);
             int pos = fall.getPositionInColumn();
             int col = fall.getColumnNumber();
             fallDown(getRectangle(pos,col),howMuch);
         }
-        /*
+
         for (Block top: toPlaceOnTops){
             int howMuch = howManyFadedBelow(fadeOuts,top);
             int pos = top.getPositionInColumn();
             int col = top.getColumnNumber();
             fallDown(refreshBlockRectangle(top,animated.getRowOfColumns()),howMuch);
         }
-        */
+
 
         //mainGridPane.getChildren().clear();
         //mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),1,1);

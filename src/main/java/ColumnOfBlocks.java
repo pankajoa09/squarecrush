@@ -31,6 +31,7 @@ public class ColumnOfBlocks {
     }
 
     public void removeBlock(Block block){
+
         this.containingBlocks.remove(block);
     }
 
@@ -39,6 +40,7 @@ public class ColumnOfBlocks {
         for (Block blk : this.containingBlocks){
             if (blk.getPositionInColumn() == positionInColumn){
                 block = blk;
+                break;
             }
         }
         return block;

@@ -9,15 +9,13 @@ public class Main extends Application {
 
 
     public static void main(String[] args) {
-        launch(args);
+        Application.launch(Main.class, args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Controller controller = new Controller();
-
-        controller.startApplication(primaryStage);
+        Controller controller = new Controller(primaryStage);
 
     }
 

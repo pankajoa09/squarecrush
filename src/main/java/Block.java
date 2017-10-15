@@ -19,6 +19,19 @@ public class Block {
     private int positionInColumn; // j
     private int columnNumber; // i
     private BlockImage blockImage;
+    private boolean active = false;
+
+    public void setActiveTrue(){
+        this.active = true;
+    }
+
+    public void setActiveFalse(){
+        this.active = false;
+    }
+
+    public boolean isActive(){
+        return this.active;
+    }
 
     public int getPositionInColumn() {
         return positionInColumn;
@@ -45,13 +58,13 @@ public class Block {
     }
 
 
-    public void createBlock(int columnNumber, int positionInColumn, BlockImage blockImage) {
+    public void createBlock(int positionInColumn, int columnNumber, BlockImage blockImage) {
         this.columnNumber = columnNumber;
         this.positionInColumn = positionInColumn;
         this.blockImage = blockImage;
     }
 
-    public void createRandomBlock(int columnNumber,int positionInColumn,int blockImagePoolSize){
+    public void createRandomBlock(int positionInColumn,int columnNumber,int blockImagePoolSize){
         this.columnNumber = columnNumber;
         this.positionInColumn = positionInColumn;
         BlockImage blockImage = new BlockImage();
