@@ -41,9 +41,7 @@ public class View {
     private final static int HEIGHT = 10;
     private final static int TRUE_HEIGHT = 5;
     private final static int BLOCK_RECTANGLE_SIZE = 80;
-    private final static int BLOCK_IMAGE_POOL_SIZE = 2;
     private Timeline timeline;
-    private AnimationTimer timer;
 
 
 
@@ -78,10 +76,7 @@ public class View {
 
 
     public void hey(Animated animated){
-        ArrayList<Block> thewater = animated.getToPlaceOnTop();
-        //for (Block jasmine : thewater) {
-        //    animated.getRowOfColumns().addBlock(jasmine);
-        //}
+        mainGridPane.getChildren().clear();
         mainGridPane.getChildren().removeAll();
         mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),2,2);
         mainGridPane.setTranslateY(-200);
@@ -98,15 +93,7 @@ public class View {
 
     public GridPane refreshRowOfColumnsPane(RowOfColumns rowOfColumns){
         GridPane rowOfColumnsPane = new GridPane();
-        /*
-        int index=0;
-        for (ColumnOfBlocks columnOfBlocks: rowOfColumns.getContainingColumns()){
-            GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks, rowOfColumns);
-            rowOfColumnsPane.setColumnIndex(columnOfBlocksPane,index);
-            rowOfColumnsPane.getChildren().addAll(columnOfBlocksPane);
-            index++;
-        }
-        */
+
 
         for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
             ColumnOfBlocks columnOfBlocks = rowOfColumns.getColumnOfBlocks(i);
@@ -121,15 +108,7 @@ public class View {
         GridPane columnOfBlocksPane = new GridPane();
         int index = 0;
         System.out.println("");
-        /*
-        for (Block block: columnOfBlocks.getContainingBlocks()){
-            System.out.print(block.getPositionInColumn()+"."+ block.getColumnNumber()+" ");
-            StackPane blockRectangle = refreshBlockRectangle(block,rowOfColumns);
-            columnOfBlocksPane.setRowIndex(blockRectangle,index);
-            columnOfBlocksPane.getChildren().addAll(blockRectangle);
-            index++;
-        }
-        */
+
         for (int i = 0; i < columnOfBlocks.getContainingBlocks().size();i++){
             Block block = columnOfBlocks.getBlock(i);
             StackPane blockRectangle = refreshBlockRectangle(block,rowOfColumns);
@@ -152,7 +131,8 @@ public class View {
         blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
         //blockRectangle.setFill(new Color(1,1,1,1));
         StackPane rectanglePane = new StackPane();
-        Label text = new Label(block.getBlockImage().getName().substring(0,2)+" "+(block.getPositionInColumn()-5)+" "+block.getColumnNumber());
+        //Label text = new Label((block.getPositionInColumn()-5)+" "+block.getColumnNumber());
+        Label text = new Label("");
         Font font = new Font("Impact",30);
         text.fontProperty().set(font);
         rectanglePane.getChildren().addAll(blockRectangle,text);
@@ -188,7 +168,6 @@ public class View {
         timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 if (Ind==Smth) {
-                    System.out.println("FUCKKK ME OUTTT");
                     hey(ANIMATED);
 
                     //stackPane.getChildren().clear();
@@ -202,11 +181,17 @@ public class View {
         //timer.start();
     }
 
+    private void move(StackPane rectangle){
+
+    }
+
 
     //fckmeouttt
 
 
     private void fade(StackPane rectangle){
+        System.out.println("does it work");
+
         FadeTransition ft = new FadeTransition(Duration.millis(500), rectangle);
         ft.setFromValue(1.0);
         ft.setToValue(0);
