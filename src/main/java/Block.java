@@ -72,6 +72,13 @@ public class Block {
         this.blockImage = blockImage;
     }
 
+    public void createNullBlock(int positionInColumn,int columnNumber){
+        this.columnNumber = columnNumber;
+        this.positionInColumn = positionInColumn;
+        BlockImage blockImage = new BlockImage();
+        blockImage.setName("null");
+    }
+
 
 
 

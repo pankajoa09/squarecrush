@@ -19,7 +19,7 @@ public class Engine {
     private final static int TRUE_HEIGHT = 10;
     private final static int HEIGHT = 5;
     private final static int BLOCK_RECTANGLE_SIZE = 80;
-    private final static int BLOCK_IMAGE_POOL_SIZE = 2;
+    private final static int BLOCK_IMAGE_POOL_SIZE = 8;
 
     private ArrayList<Block> getBlocksToRemove(Block block, RowOfColumns rowOfColumns, ArrayList<Block> clusterOfBlocks){
         // because we cannot let it look backwards we need to tell it where it has been, which is in the parameter as visited.
@@ -70,7 +70,10 @@ public class Engine {
         ArrayList<Block> clusterOfBlocks = new ArrayList<Block>();
         Queue<Block> visited = new LinkedList<Block>();
         //visited[a]
+        //just getting around the non active blocks
+        if (block.isActive()){
         visited.add(block);
+        }
         while (!visited.isEmpty()) {
             //visited.pop() = a -> surround(a) = [b]
             Block current = visited.remove();
@@ -111,16 +114,11 @@ public class Engine {
 
     private Animated destroyBlock(Block block, Animated animated){
         RowOfColumns rowOfColumns = animated.getRowOfColumns();
-
-
-
         ColumnOfBlocks column = rowOfColumns.getColumnOfBlocks(block.getColumnNumber());
         // remove the block
         column.removeBlock(block);
-
         //System.out.println("OLD BLOCK");
         //debug.printBlock(block);
-
         // get the top blocks shift them down
         ArrayList<Block> topBlocks = getBlocksOnTopOfBlock(block,column);
         ArrayList<Block> topBlocksShifted = shiftDownBlocks(topBlocks,1);
@@ -129,10 +127,6 @@ public class Engine {
         //create a block to replace that lost block and place it on top
         Block replacer = new Block();
         replacer.createRandomBlock(0,column.getPositionInRowOfColumns(),3);
-
-        //System.out.println("REPLACER BLOCK");
-        //debug.printBlock(replacer);
-
         //add the replacement to the top blocks
         topBlocksShifted.add(replacer);
         //add the bottom blocks
@@ -143,17 +137,11 @@ public class Engine {
         rowOfColumns.removeColumnOfBlocks(rowOfColumns.getColumnOfBlocks(block.getColumnNumber()));
         //add the new column
         rowOfColumns.addColumnOfBlocks(column);
-
         //needed for animation
-
-
         animated.addToPlaceOnTop(replacer);
         animated.addAllToMoveDown(topBlocks);
-
-
         //set them back into animate
         animated.setRowOfColumns(rowOfColumns);
-
         return animated;
     }
 
@@ -178,6 +166,7 @@ public class Engine {
             BlockImage blockImage = block.getBlockImage();
             Block shifted = new Block();
             shifted.createBlock(block.getPositionInColumn()+shiftDownBy,block.getColumnNumber(),blockImage);
+            shifted.setActiveTrue();
             //debug.printBlock(shifted);
             shiftedDown.add(shifted);
         }
@@ -200,29 +189,7 @@ public class Engine {
 
 
 
-    public RowOfColumns createRowOfColumns(){
-        RowOfColumns rowOfColumns = new RowOfColumns();
-        //populate rowofcolumns with columns
-        for (int i=0; i<WIDTH;i++){
-            ColumnOfBlocks columnOfBlocks = new ColumnOfBlocks();
-            columnOfBlocks.setPositionInRowOfColumns(i);
-            rowOfColumns.addColumnOfBlocks(columnOfBlocks);
-        }
 
-        for (ColumnOfBlocks col : rowOfColumns.getContainingColumns()){
-            for (int i =0; i<TRUE_HEIGHT;i++){
-                Block block = new Block();
-                block.createRandomBlock(i,col.getPositionInRowOfColumns(),BLOCK_IMAGE_POOL_SIZE);
-                if (i > HEIGHT){
-                    block.setActiveTrue();
-                }
-                col.addBlock(block);
-            }
-        }
-        //debug.printRowOfColumns(rowOfColumns);
-        //debug.printArrayInRowOfColumns(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(),rowOfColumns);
-        return rowOfColumns;
-    }
 
 
 

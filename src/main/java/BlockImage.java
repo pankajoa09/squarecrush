@@ -2,6 +2,7 @@
  * Created by pjoa09 on 9/26/17.
  */
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 
 import javax.imageio.ImageIO;
@@ -17,7 +18,9 @@ import org.apache.commons.io.FilenameUtils;
 public class BlockImage {
     private final String imageLocation = "BlockImages";
 
-    String name;
+    private String name;
+    private Image image;
+    private Color color;
 
     public String getName() {
         return name;
@@ -37,7 +40,9 @@ public class BlockImage {
 
 
 
-    Image image;
+
+
+
 
 
 
@@ -77,6 +82,11 @@ public class BlockImage {
         }
         return listOfBlockImages;
     }
+
+
+
+
+
 
 
 

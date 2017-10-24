@@ -11,6 +11,17 @@ public class Animated{
     private RowOfColumns rowOfColumns = new RowOfColumns();
 
 
+
+    private Clicks clicks = new Clicks();
+
+    public Clicks getClicks() {
+        return clicks;
+    }
+
+    public void setClicks(Clicks clicks) {
+        this.clicks = clicks;
+    }
+
     public RowOfColumns getRowOfColumns() {
         return rowOfColumns;
     }
@@ -21,7 +32,7 @@ public class Animated{
 
 
     public void addToFade(Block block){
-        if (!this.toFade.contains(block)) {
+        if (!this.toFade.contains(block) && block.isActive()) {
             this.toFade.add(block);
         }
     }

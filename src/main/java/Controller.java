@@ -10,6 +10,7 @@ public class Controller {
     private final Stage primaryStage;
     //View view = new View(primaryStage);
     Engine engine = new Engine();
+    BoardFactory boardFactory = new BoardFactory();
     Debug debug= new Debug();
 
     public Controller(Stage primaryStage) {
@@ -25,7 +26,7 @@ public class Controller {
 
     public RowOfColumns newGame(){
         System.out.println("new game called");
-        RowOfColumns rowOfColumns = engine.createRowOfColumns();
+        RowOfColumns rowOfColumns = boardFactory.createRowOfColumns();
         //debug.showBlockOnGrid(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(), rowOfColumns);
         return rowOfColumns;
     }

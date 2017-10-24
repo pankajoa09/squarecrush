@@ -34,8 +34,13 @@ public class View {
     //private static GridPane rowOfColumnsPane = new GridPane();
     private final Stage primaryStage;
 
+
+
+
+
     private final StackPane stackPane = new StackPane();
     private final GridPane mainGridPane = new GridPane();
+
     private final static int MAX_OBJECTS = 3;
     private final static int WIDTH = 5;
     private final static int HEIGHT = 10;
@@ -44,14 +49,19 @@ public class View {
     private Timeline timeline;
 
 
+    public View(Stage primaryStage){
+        this.primaryStage = primaryStage;
+
+    }
+
 
     Debug debug = new Debug();
 
 
 
-    public View(Stage primaryStage){
-        this.primaryStage = primaryStage;
-    }
+
+
+
 
     public void initializeStage(RowOfColumns rowOfColumns){
 
@@ -75,14 +85,6 @@ public class View {
 
 
 
-    public void hey(Animated animated){
-        mainGridPane.getChildren().clear();
-        mainGridPane.getChildren().removeAll();
-        mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),2,2);
-        mainGridPane.setTranslateY(-200);
-    }
-
-
 
 
 
@@ -90,6 +92,13 @@ public class View {
 // A RowOfColumns is displayed as a GridPane called rowOfColumnsPane
 // A ColumnOfBlocks is displayed as a GridPane called columnOfBlocks
 // A Block is displayed as a Rectangle called BlockRectangle
+
+    public void refreshMainGrid(Animated animated){
+        mainGridPane.getChildren().clear();
+        mainGridPane.getChildren().removeAll();
+        mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),2,2);
+        mainGridPane.setTranslateY(-200);
+    }
 
     public GridPane refreshRowOfColumnsPane(RowOfColumns rowOfColumns){
         GridPane rowOfColumnsPane = new GridPane();
@@ -136,7 +145,8 @@ public class View {
         Font font = new Font("Impact",30);
         text.fontProperty().set(font);
         rectanglePane.getChildren().addAll(blockRectangle,text);
-        final Stage stage = this.primaryStage;
+        final GridPane finalMainGridPane = this.mainGridPane;
+        final Stage finalPrimaryStage = this.primaryStage;
         rectanglePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
                 Event event = new Event();
@@ -149,7 +159,9 @@ public class View {
         return rectanglePane;
     }
 
-    private void fallDown(StackPane rectangle,int howFar, int ind,int smth,Animated animated){
+    ///all animations below. I seriously cant split this class no matter how much I try.
+
+    private void fallDown(StackPane rectangle, int howFar, int ind, int smth, Animated animated){
         //rectangle.setEffect(new Lighting());
         timeline = new Timeline();
         timeline.setCycleCount(1);
@@ -164,11 +176,11 @@ public class View {
         timeline.getKeyFrames().add(keyFrame);
         final int Ind = ind;
         final int Smth = smth;
-        final Animated ANIMATED = animated;
+        final Animated finalAnimated = animated;
         timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 if (Ind==Smth) {
-                    hey(ANIMATED);
+                    refreshMainGrid(finalAnimated);
 
                     //stackPane.getChildren().clear();
                     //stackPane.getChildren().removeAll();
@@ -186,7 +198,7 @@ public class View {
     }
 
 
-    //fckmeouttt
+
 
 
     private void fade(StackPane rectangle){
@@ -225,9 +237,6 @@ public class View {
         }
 
 
-
-
-
         //mainGridPane.getChildren().clear();
         //mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),1,1);
 
@@ -243,7 +252,6 @@ public class View {
                 }
             }
         }
-
         //System.out.println("how many faded: "+count);
         return count;
     }
@@ -253,7 +261,16 @@ public class View {
 
     public StackPane getRectangle(int positionInColumn,int column){
         StackPane returnedRectangle = new StackPane();
-        GridPane rowOfColumnsPane = (GridPane)this.mainGridPane.getChildren().get(0);
+
+        GridPane rowOfColumnsPane = new GridPane();
+        try {
+            rowOfColumnsPane = (GridPane)this.mainGridPane.getChildren().get(0);
+        }
+        catch (IndexOutOfBoundsException iobe){
+            System.out.println("LOOOK HERE");
+            System.out.println(this.mainGridPane.getChildren());
+        }
+
         Node gridPane = rowOfColumnsPane.getChildren().get(column);
         if (gridPane instanceof GridPane){
             //System.out.println(((GridPane)nodeOut).getChildren());
@@ -271,6 +288,10 @@ public class View {
         return returnedRectangle;
 
     }
+
+
+
+
 
 
 

@@ -27,8 +27,8 @@ public class Debug {
         for (int pos=0;pos<rowOfColumns.getColumnOfBlocks(1).getContainingBlocks().size();pos++){
             for (int col=0;col<rowOfColumns.getContainingColumns().size();col++){
                 Block block = rowOfColumns.getBlock(col,pos);
-                //System.out.print(block.getPositionInColumn() + "."+block.getColumnNumber()+" ");
-                //System.out.print(block.getPositionInColumn() + "."+block.getColumnNumber()+" ");
+
+               // System.out.print(block.getPositionInColumn() + "."+block.getColumnNumber()+" ");
                 if (targetBlocks.contains(block)) {
                     System.out.print(block.getBlockImage().getName().substring(0, 2).toUpperCase() + " ");
                 } else {
@@ -47,7 +47,7 @@ public class Debug {
     //
 
     public void printBlock(Block block){
-        System.out.println(block.getBlockImage().getName()+" pos:"+block.getPositionInColumn()+" col:"+block.getColumnNumber());
+        System.out.println(block.getBlockImage().getName()+" pos:"+block.getPositionInColumn()+" col:"+block.getColumnNumber()+" "+block.isActive());
     }
 
 

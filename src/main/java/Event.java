@@ -1,4 +1,6 @@
 import com.sun.rowset.internal.Row;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import java.util.ArrayList;
 
@@ -9,13 +11,37 @@ public class Event {
 
     Debug debug = new Debug();
     Engine engine = new Engine();
+    Service service = new Service();
+
+    private static Block firstClick;
 
 
-    public Animated rectangleBlockClickHandler(int columnNumber, int positionInColumn, RowOfColumns rowOfColumns){
-        System.out.println("clicked: "+columnNumber+" "+positionInColumn);
-        Block clickedBlock = rowOfColumns.getBlock(columnNumber,positionInColumn);
-        Animated animated = engine.processClicked(clickedBlock,rowOfColumns);
-        return animated;
+    public void rectangleBlockClickHandler(int columnNumber, int positionInColumn, RowOfColumns rowOfColumns){
+        Block clicked = rowOfColumns.getBlock(columnNumber,positionInColumn);
+        if (isSecondClick(clicked)){
+            Block firstClick = getFirstClick();
+            Block secondClick = clicked;
+            Animated animated = service.updateAnimated(firstClick,secondClick);
+        }
+        else{
+           storeFirstClick(clicked);
+        }
+    }
+
+    private Boolean isSecondClick(Block block){
+        Boolean answer = false;
+        if (!firstClick.equals(null)){
+            answer = true;
+        }
+        return answer;
+    }
+
+    private void storeFirstClick(Block clicked){
+        firstClick = clicked;
+    }
+
+    private Block getFirstClick(){
+        return firstClick;
     }
 
 

@@ -25,18 +25,30 @@ public class ColumnOfBlocks {
         this.containingBlocks = containingBlocks;
     }
 
-
     public void addBlock(Block block){
-        this.containingBlocks.add(block);
+        if (!this.containingBlocks.contains(block) && block.isActive()) {
+            this.containingBlocks.add(block);
+        }
     }
 
-    public void removeBlock(Block block){
 
+    public void addAllBlocks(ArrayList<Block> blocks){
+        for (Block block : blocks) {
+            this.addBlock(block);
+        }
+    }
+
+
+
+
+    public void removeBlock(Block block){
         this.containingBlocks.remove(block);
+        Block nullBlock = new Block();
+        nullBlock.createNullBlock(block.getPositionInColumn(),block.getColumnNumber());
     }
 
     public Block getBlock(int positionInColumn){
-        Block block = new Block();
+        Block block = null;
         for (Block blk : this.containingBlocks){
             if (blk.getPositionInColumn() == positionInColumn){
                 block = blk;

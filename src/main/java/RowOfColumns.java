@@ -1,3 +1,6 @@
+import com.sun.rowset.internal.Row;
+import javafx.scene.layout.BorderPane;
+
 import java.util.ArrayList;
 
 /**
@@ -29,6 +32,40 @@ public class RowOfColumns {
         this.getColumnOfBlocks(block.getColumnNumber()).addBlock(block);
     }
 
+    public void removeBlock(Block block){
+        if (blockLocationIsValid(block.getColumnNumber(),block.getPositionInColumn())){
+            this.getColumnOfBlocks(block.getColumnNumber()).removeBlock(block);
+        }
+        else{
+            System.out.println("couldn't remove block because it doesn't exist");
+        }
+    }
+
+
+
+
+    public Block getBlockNew(int columnNumber, int positionInColumn){
+        Block ans = new Block();
+        if (blockLocationIsValid(columnNumber,positionInColumn)){
+            Block block = getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
+            ans = block;
+        }
+        else{
+            Block block = new Block();
+            block.createRandomBlock(-100,-100,3);
+            ans = block;
+        }
+        return ans;
+    }
+
+    private Boolean blockLocationIsValid(int columnNumber, int positionInColumn){
+        int rowSize = this.getContainingColumns().size();
+        Boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
+        int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
+        Boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
+        return (matchesColumnNumberConstraint && matchesPositionInColumnConstraint);
+    }
+
     public Block getBlock(int columnNumber, int positionInColumn){
         Debug debug = new Debug();
 
@@ -37,24 +74,14 @@ public class RowOfColumns {
         Boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
         if (matchesColumnNumberConstraint) {
             int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
-            //System.out.println("row: "+rowSize+" column: "+columnSize);
-            //System.out.println("position: "+positionInColumn+" column: "+columnNumber);
-
             Boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
             if (matchesPositionInColumnConstraint) {
-
-
                 block = getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
-
-
             } else {
-                //System.out.println("CRAP OUT1");
-
                 block.createRandomBlock(-100, -100, 3);
             }
         }
         else{
-            //System.out.println("CRAP OUT2");
             block.createRandomBlock(-100,-100,3);
         }
         return block;
@@ -68,6 +95,12 @@ public class RowOfColumns {
             }
         }
         return columnOfBlocks;
+    }
+
+    @Override
+    public RowOfColumns clone(){
+        BoardFactory boardFactory = new BoardFactory();
+        return boardFactory.createRowOfColumnsClone(this);
     }
 
 
