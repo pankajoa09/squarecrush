@@ -31,7 +31,8 @@ public class Service{
             animated.addAllToFade(toDestroy);
             animated.setRowOfColumns(rowOfColumns);
             animated.addAllToPlaceOnTop(replacementBlocks);
-            animated.addAllToMoveDown();
+            animated.addAllToMoveDown(replacementBlocks);
+//            animated.addAllToMoveDown();
         }
         else{
         }
@@ -55,7 +56,7 @@ public class Service{
         for (Block block: replacement){
             rowOfColumns.addBlock(block);
         }
-        return rowOfColumns
+        return rowOfColumns;
     }
 
     private RowOfColumns applySwap(Block firstClick, Block secondClick, RowOfColumns rowOfColumns){

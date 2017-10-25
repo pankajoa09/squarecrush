@@ -1,19 +1,15 @@
-import com.sun.imageio.plugins.gif.GIFImageReader;
-import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.glassfish.gmbal.Impact;
-import com.sun.rowset.internal.Row;
-import javafx.animation.*;
+import javafx.animation.FadeTransition;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.effect.Lighting;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -21,7 +17,6 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 
 
@@ -107,7 +102,7 @@ public class View {
         for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
             ColumnOfBlocks columnOfBlocks = rowOfColumns.getColumnOfBlocks(i);
             GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks,rowOfColumns);
-            rowOfColumnsPane.setColumnIndex(columnOfBlocksPane,i);
+            GridPane.setColumnIndex(columnOfBlocksPane,i);
             rowOfColumnsPane.getChildren().addAll(columnOfBlocksPane);
         }
         return rowOfColumnsPane;
@@ -121,7 +116,7 @@ public class View {
         for (int i = 0; i < columnOfBlocks.getContainingBlocks().size();i++){
             Block block = columnOfBlocks.getBlock(i);
             StackPane blockRectangle = refreshBlockRectangle(block,rowOfColumns);
-            columnOfBlocksPane.setRowIndex(blockRectangle,i);
+            GridPane.setRowIndex(blockRectangle,i);
             columnOfBlocksPane.getChildren().addAll(blockRectangle);
         }
 
@@ -152,7 +147,8 @@ public class View {
                 Event event = new Event();
                 System.out.println("clickk");
                 Animated animated = event.rectangleBlockClickHandler(columnNumber,positionInColumn,rowOfColumns);
-                animator(animated);
+//                Animated animated = event.rectangleBlockClickHandler(columnNumber,positionInColumn,rowOfColumns);
+//                animator(animated);
 
             }
         });
