@@ -7,10 +7,9 @@ public class BoardFactory {
 
     private final static int MAX_OBJECTS = 3;
     private final static int WIDTH = 5;
-    private final static int TRUE_HEIGHT = 10;
     private final static int HEIGHT = 5;
-    private final static int BLOCK_RECTANGLE_SIZE = 80;
     private final static int BLOCK_IMAGE_POOL_SIZE = 8;
+
 
 
     public RowOfColumns createRowOfColumns(){
@@ -23,16 +22,13 @@ public class BoardFactory {
         }
 
         for (ColumnOfBlocks col : rowOfColumns.getContainingColumns()){
-            for (int i =0; i<TRUE_HEIGHT;i++){
+            for (int i =0; i<HEIGHT;i++){
                 Block block = new Block();
                 block.createRandomBlock(i,col.getPositionInRowOfColumns(),BLOCK_IMAGE_POOL_SIZE);
-                if (i >= HEIGHT){
-                    block.setActiveTrue();
-                }
                 col.addBlock(block);
             }
         }
-        //debug.printRowOfColumns(rowOfColumns);
+
         //debug.printArrayInRowOfColumns(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(),rowOfColumns);
         return rowOfColumns;
     }
@@ -41,27 +37,18 @@ public class BoardFactory {
 
         RowOfColumns rowOfColumnsClone = new RowOfColumns();
 
-        for (int i=0; i<WIDTH;i++){
-            ColumnOfBlocks columnOfBlocks = new ColumnOfBlocks();
-            columnOfBlocks.setPositionInRowOfColumns(i);
-            rowOfColumnsClone.addColumnOfBlocks(columnOfBlocks);
-        }
-
-        for (ColumnOfBlocks col : rowOfColumns.getContainingColumns()){
-            for (int i =0; i<TRUE_HEIGHT;i++){
-                Block block = new Block();
-                BlockImage oldBlockImage = rowOfColumns.getBlock(i,col.getPositionInRowOfColumns()).getBlockImage();
-                BlockImage blockImage = new BlockImage();
-                blockImage.setImage(oldBlockImage.getImage());
-                blockImage.setName(oldBlockImage.getName());
-                block.createBlock(i,col.getPositionInRowOfColumns(),blockImage);
-                if (i >= HEIGHT){
-                    block.setActiveTrue();
-                }
-                col.addBlock(block);
+        for (ColumnOfBlocks column : rowOfColumns.getContainingColumns()){
+            ColumnOfBlocks cloneColumn = new ColumnOfBlocks();
+            for (Block block : column.getContainingBlocks()){
+                Block cloneBlock = new Block();
+                BlockImage cloneBlockImage = new BlockImage();
+                cloneBlockImage.create(block.getBlockImage().getName(),block.getBlockImage().getImage());
+                cloneBlock.createBlock(block.getPositionInColumn(),block.getColumnNumber(),cloneBlockImage);
+                cloneColumn.addBlock(cloneBlock);
             }
+            rowOfColumnsClone.addColumnOfBlocks(cloneColumn);
         }
 
-        return rowOfColumns;
+        return rowOfColumnsClone;
     }
 }

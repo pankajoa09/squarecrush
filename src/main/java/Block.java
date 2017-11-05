@@ -14,24 +14,10 @@ import java.util.ArrayList;
 public class Block {
 
 
-
-
     private int positionInColumn; // j
     private int columnNumber; // i
     private BlockImage blockImage;
-    private boolean active = false;
 
-    public void setActiveTrue(){
-        this.active = true;
-    }
-
-    public void setActiveFalse(){
-        this.active = false;
-    }
-
-    public boolean isActive(){
-        return this.active;
-    }
 
     public int getPositionInColumn() {
         return positionInColumn;
@@ -75,8 +61,9 @@ public class Block {
     public void createNullBlock(int positionInColumn,int columnNumber){
         this.columnNumber = columnNumber;
         this.positionInColumn = positionInColumn;
-        BlockImage blockImage = new BlockImage();
-        blockImage.setName("null");
+        BlockImage nullBlockImage = new BlockImage();
+        nullBlockImage.createNull();
+        this.blockImage = nullBlockImage;
     }
 
 

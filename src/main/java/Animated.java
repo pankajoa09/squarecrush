@@ -5,8 +5,8 @@ import java.util.ArrayList;
  */
 public class Animated{
 
-    private ArrayList<Block> toFade = new ArrayList<Block>();
-    private ArrayList<Block> toMoveDown = new ArrayList<Block>();
+    private ArrayList<Block> toDestroy = new ArrayList<Block>();
+    private ArrayList<Block> toFall = new ArrayList<Block>();
     private ArrayList<Block> toPlaceOnTop = new ArrayList<Block>();
     private RowOfColumns rowOfColumns = new RowOfColumns();
 
@@ -31,43 +31,43 @@ public class Animated{
     }
 
 
-    public void addToFade(Block block){
-        if (!this.toFade.contains(block) && block.isActive()) {
-            this.toFade.add(block);
+    public void addToDestroy(Block block){
+        if (!this.toDestroy.contains(block)) {
+            this.toDestroy.add(block);
         }
     }
 
 
-    public void addAllToFade(ArrayList<Block> blocks){
+    public void addAllToDestroy(ArrayList<Block> blocks){
         for (Block block : blocks) {
-            this.addToFade(block);
+            this.addToDestroy(block);
         }
     }
 
-    public void removeFromToFade(Block block) {
-        if (this.toFade.contains(block)){
-            this.toFade.remove(block);
+    public void removeFromToDestroy(Block block) {
+        if (this.toDestroy.contains(block)){
+            this.toDestroy.remove(block);
         }
         else{
             System.out.println("It's not in tofade");
         }
     }
 
-    public void addToMoveDown(Block block){
-        if (!this.toMoveDown.contains(block)) {
-            this.toMoveDown.add(block);
+    public void addToFall(Block block){
+        if (!this.toFall.contains(block)) {
+            this.toFall.add(block);
         }
     }
 
-    public void addAllToMoveDown(ArrayList<Block> blocks){
+    public void addAllToFall(ArrayList<Block> blocks){
         for (Block block : blocks) {
-            this.addToMoveDown(block);
+            this.addToFall(block);
         }
     }
 
-    public void removeFromToMoveDown(Block block) {
-        if (this.toMoveDown.contains(block)){
-            this.toMoveDown.remove(block);
+    public void removeFromToFall(Block block) {
+        if (this.toFall.contains(block)){
+            this.toFall.remove(block);
         }
         else{
             System.out.println("It's not in tomovedown");
@@ -100,20 +100,20 @@ public class Animated{
         }
     }
 
-    public ArrayList<Block> getToFade() {
-        return toFade;
+    public ArrayList<Block> getToDestroy() {
+        return toDestroy;
     }
 
-    public void setToFade(ArrayList<Block> toFade) {
-        this.toFade = toFade;
+    public void setToDestroy(ArrayList<Block> toDestroy) {
+        this.toDestroy = toDestroy;
     }
 
-    public ArrayList<Block> getToMoveDown() {
-        return toMoveDown;
+    public ArrayList<Block> getToFall() {
+        return toFall;
     }
 
-    public void setToMoveDown(ArrayList<Block> toMoveDown) {
-        this.toMoveDown = toMoveDown;
+    public void setToFall(ArrayList<Block> toFall) {
+        this.toFall = toFall;
     }
 
     public ArrayList<Block> getToPlaceOnTop() {

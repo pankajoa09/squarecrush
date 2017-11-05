@@ -55,7 +55,7 @@ public class Engine {
 
         for (Block surroundingBlock : surroundingBlocks){
             //if they are of the same type and are not in visited
-            if (surroundingBlock.getBlockImage().getName().equals(block.getBlockImage().getName()) && (!clusterOfBlocks.contains(surroundingBlock)) && surroundingBlock.isActive()){
+            if (surroundingBlock.getBlockImage().getName().equals(block.getBlockImage().getName()) && (!clusterOfBlocks.contains(surroundingBlock))){
                 blocksToRemove.add(surroundingBlock);
             }
         }
@@ -71,14 +71,11 @@ public class Engine {
         Queue<Block> visited = new LinkedList<Block>();
         //visited[a]
         //just getting around the non active blocks
-        if (block.isActive()){
-        visited.add(block);
-        }
         while (!visited.isEmpty()) {
             //visited.pop() = a -> surround(a) = [b]
             Block current = visited.remove();
-            animated.addToFade(current);
-            ArrayList<Block> surround = getBlocksToRemove(current, animated.getRowOfColumns(), animated.getToFade());
+            animated.addToDestroy(current);
+            ArrayList<Block> surround = getBlocksToRemove(current, animated.getRowOfColumns(), animated.getToDestroy());
             //visited.append([b])
             if (!surround.isEmpty()) {
                 for (Block blk : surround) {
@@ -100,7 +97,7 @@ public class Engine {
     }
 
     public Animated destroyCluster(Animated animated){
-        ArrayList<Block> fade = animated.getToFade();
+        ArrayList<Block> fade = animated.getToDestroy();
         RowOfColumns rowOfColumns = animated.getRowOfColumns();
         debug.printArrayInRowOfColumns(fade,rowOfColumns);
         for (Block block : fade){
@@ -139,7 +136,7 @@ public class Engine {
         rowOfColumns.addColumnOfBlocks(column);
         //needed for animation
         animated.addToPlaceOnTop(replacer);
-        animated.addAllToMoveDown(topBlocks);
+        animated.addAllToFall(topBlocks);
         //set them back into animate
         animated.setRowOfColumns(rowOfColumns);
         return animated;
@@ -166,7 +163,7 @@ public class Engine {
             BlockImage blockImage = block.getBlockImage();
             Block shifted = new Block();
             shifted.createBlock(block.getPositionInColumn()+shiftDownBy,block.getColumnNumber(),blockImage);
-            shifted.setActiveTrue();
+
             //debug.printBlock(shifted);
             shiftedDown.add(shifted);
         }

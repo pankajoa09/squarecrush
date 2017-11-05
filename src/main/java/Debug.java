@@ -12,9 +12,9 @@ public class Debug {
         for (int pos=0;pos<rowOfColumns.getColumnOfBlocks(1).getContainingBlocks().size();pos++){
             for (int col=0;col<rowOfColumns.getContainingColumns().size();col++){
                 Block block = rowOfColumns.getBlock(col,pos);
-                System.out.print(block.getPositionInColumn() + "."+block.getColumnNumber()+" ");
+                //System.out.print(block.getPositionInColumn() + "."+block.getColumnNumber()+" ");
 
-                //System.out.print(block.getBlockImage().getName().substring(0, 2) + " ");
+                System.out.print(block.getBlockImage().getName().substring(0, 2) + " ");
             }
             System.out.println("");
         }
@@ -33,8 +33,6 @@ public class Debug {
                     System.out.print(block.getBlockImage().getName().substring(0, 2).toUpperCase() + " ");
                 } else {
                     System.out.print(block.getBlockImage().getName().substring(0, 2) + " ");
-
-
                 }
             }
             System.out.println("");
@@ -47,7 +45,7 @@ public class Debug {
     //
 
     public void printBlock(Block block){
-        System.out.println(block.getBlockImage().getName()+" pos:"+block.getPositionInColumn()+" col:"+block.getColumnNumber()+" "+block.isActive());
+        System.out.println(block.getBlockImage().getName()+" pos:"+block.getPositionInColumn()+" col:"+block.getColumnNumber());
     }
 
 

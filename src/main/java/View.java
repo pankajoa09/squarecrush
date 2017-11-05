@@ -43,8 +43,7 @@ public class View {
 
     private final static int MAX_OBJECTS = 3;
     private final static int WIDTH = 5;
-    private final static int HEIGHT = 10;
-    private final static int TRUE_HEIGHT = 5;
+    private final static int HEIGHT = 5;
     private final static int BLOCK_RECTANGLE_SIZE = 80;
     private Timeline timeline;
 
@@ -65,19 +64,18 @@ public class View {
 
     public void initializeStage(RowOfColumns rowOfColumns){
 
-        primaryStage.setHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
+        //primaryStage.setHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMaxHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
-        primaryStage.setMinHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
-        primaryStage.setWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
+        //primaryStage.setMinHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
+        //primaryStage.setWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMaxWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
-        primaryStage.setMinWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
+        //primaryStage.setMinWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
 
         GridPane rowOfColumnsPane = refreshRowOfColumnsPane(rowOfColumns);
         mainGridPane.add(rowOfColumnsPane,2,2);
-        mainGridPane.setTranslateY(-200);
         stackPane.getChildren().clear();
         stackPane.getChildren().addAll(mainGridPane);
-        Scene scene = new Scene(stackPane, WIDTH*BLOCK_RECTANGLE_SIZE, TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE+10);
+        Scene scene = new Scene(stackPane, WIDTH*BLOCK_RECTANGLE_SIZE, HEIGHT*BLOCK_RECTANGLE_SIZE+10);
         primaryStage.setTitle("CRUSHMEH");
         primaryStage.setScene(scene);
         primaryStage.show();
@@ -102,7 +100,7 @@ public class View {
 
     public GridPane refreshRowOfColumnsPane(RowOfColumns rowOfColumns){
         GridPane rowOfColumnsPane = new GridPane();
-
+        debug.printRowOfColumns(rowOfColumns);
 
         for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
             ColumnOfBlocks columnOfBlocks = rowOfColumns.getColumnOfBlocks(i);
@@ -115,7 +113,7 @@ public class View {
 
     private GridPane refreshColumnOfBlocksPane(ColumnOfBlocks columnOfBlocks, RowOfColumns rowOfColumns){
         GridPane columnOfBlocksPane = new GridPane();
-        int index = 0;
+
         System.out.println("");
 
         for (int i = 0; i < columnOfBlocks.getContainingBlocks().size();i++){
@@ -216,8 +214,8 @@ public class View {
 
     public void animator(Animated animated){
         System.out.println("ANIMATOR CALLED");
-        ArrayList<Block> fadeOuts = animated.getToFade();
-        ArrayList<Block> fallDowns = animated.getToMoveDown();
+        ArrayList<Block> fadeOuts = animated.getToDestroy();
+        ArrayList<Block> fallDowns = animated.getToFall();
         ArrayList<Block> toPlaceOnTops = animated.getToPlaceOnTop();
         fallDowns.addAll(toPlaceOnTops);
         for (Block fade: fadeOuts){

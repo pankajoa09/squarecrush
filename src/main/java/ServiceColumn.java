@@ -5,15 +5,56 @@ import java.util.ArrayList;
  */
 public class ServiceColumn {
 
+    Debug debug = new Debug();
+
     public ColumnOfBlocks applyGravityToColumnOfBlocks(ColumnOfBlocks currColumn){
-        ColumnOfBlocks adjustedColumn = new ColumnOfBlocks();
-        for (int i=0; i <= currColumn.getContainingBlocks().size();i++){
-            Block currBlock = currColumn.getBlock(i);
-            if (currBlock.getBlockImage().getName().equals("null")){
-                adjustedColumn = moveBlockInColumnToTop(currBlock,currColumn);
-            }
+        int si = 1;
+        System.out.println("preCRUNCH");
+        for (Block block: currColumn.getContainingBlocks()){
+            debug.printBlock(block);
         }
-        return adjustedColumn;
+        for (int fi=0; fi < currColumn.getContainingBlocks().size()-1;fi++){
+            Block curr = currColumn.getContainingBlocks().get(fi);
+            Block next = currColumn.getContainingBlocks().get(si);
+            // if they aren't one after the other then there is a gap
+            if (!(next.getPositionInColumn()-curr.getPositionInColumn()==1)){
+                int howMany = (next.getPositionInColumn()-curr.getPositionInColumn())-1;
+                ArrayList<Block> blocksOnTop = getBlocksOnTopOfBlock(curr, currColumn);
+                blocksOnTop.add(curr);
+                ArrayList<Block> blocksOnBottom = getBlocksBottomOfBlock(next, currColumn);
+                blocksOnBottom.add(next);
+                ArrayList<Block> shiftedDownBlocksOnTop = shiftDownBlocks(blocksOnTop,howMany);
+                ColumnOfBlocks adjustedColumn = new ColumnOfBlocks();
+                adjustedColumn.addAllBlocks(shiftedDownBlocksOnTop);
+                adjustedColumn.addAllBlocks(blocksOnBottom);
+                currColumn = adjustedColumn;
+                fi=0;
+                si=1;
+            }
+            si++;
+        }
+        System.out.println("postCRUNCH:");
+        for (Block block: currColumn.getContainingBlocks()){
+            debug.printBlock(block);
+        }
+
+        Block lastBlock = currColumn.getContainingBlocks().get(currColumn.getContainingBlocks().size()-1);
+
+        boolean isLastBlockAtFloor = lastBlock.getPositionInColumn()==4;
+        if (!isLastBlockAtFloor){
+            System.out.println("moving the whole thing to the floor");
+            int howFarItIsFromTheFloor = lastBlock.getPositionInColumn()-4;
+            ColumnOfBlocks adjustedColumn = new ColumnOfBlocks();
+            ArrayList<Block> adjustedBlocks = shiftDownBlocks(currColumn.getContainingBlocks(),howFarItIsFromTheFloor);
+            adjustedColumn.addAllBlocks(adjustedBlocks);
+            currColumn = adjustedColumn;
+        }
+        System.out.println("postGRAVITY:");
+        for (Block block: currColumn.getContainingBlocks()) {
+            debug.printBlock(block);
+        }
+
+        return currColumn;
     }
 
     public ColumnOfBlocks moveBlockInColumnToTop(Block block, ColumnOfBlocks columnOfBlocks){
@@ -50,7 +91,6 @@ public class ServiceColumn {
             BlockImage blockImage = block.getBlockImage();
             Block shifted = new Block();
             shifted.createBlock(block.getPositionInColumn() + shiftDownBy, block.getColumnNumber(), blockImage);
-            shifted.setActiveTrue();
             //debug.printBlock(shifted);
             shiftedDown.add(shifted);
         }

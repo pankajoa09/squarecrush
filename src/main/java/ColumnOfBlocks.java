@@ -5,6 +5,8 @@ import java.util.ArrayList;
  */
 public class ColumnOfBlocks {
 
+    Debug debug = new Debug();
+
     int positionInRowOfColumns;
 
     private ArrayList<Block> containingBlocks = new ArrayList<Block>();
@@ -26,7 +28,7 @@ public class ColumnOfBlocks {
     }
 
     public void addBlock(Block block){
-        if (!this.containingBlocks.contains(block) && block.isActive()) {
+        if (!this.containingBlocks.contains(block)) {
             this.containingBlocks.add(block);
         }
     }
@@ -39,24 +41,28 @@ public class ColumnOfBlocks {
     }
 
 
-
-
     public void removeBlock(Block block){
         this.containingBlocks.remove(block);
         Block nullBlock = new Block();
-        nullBlock.createNullBlock(block.getPositionInColumn(),block.getColumnNumber());
     }
 
     public Block getBlock(int positionInColumn){
-        Block block = null;
-        for (Block blk : this.containingBlocks){
-            if (blk.getPositionInColumn() == positionInColumn){
-                block = blk;
+        Block ans = new Block();
+        //ans.createNullBlock(positionInColumn,this.positionInRowOfColumns);
+        for (Block block : this.containingBlocks){
+            if (block.getPositionInColumn() == positionInColumn){
+                ans = block;
                 break;
             }
         }
-        return block;
+        return ans;
     }
+
+
+
+
+
+
 
 
 

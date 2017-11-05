@@ -42,9 +42,10 @@ public class BlockImage {
 
 
 
-
-
-
+    public void createNull(){
+        Image image = new Image(getClass().getResource("nullBlock/null.png").toExternalForm());
+        create("NULLBLOCK",image);
+    }
 
     public void create(String name,Image image){
         this.name = name;
@@ -72,6 +73,8 @@ public class BlockImage {
                 break;
             }
             else if (listOfFiles[i].isFile() && FilenameUtils.getExtension(listOfFiles[i].toString()).equals("png")) {
+
+
                 Image image = new Image(getClass().getResource(listOfFiles[i].getName()).toExternalForm());
                 BlockImage blockImage = new BlockImage();
                 blockImage.create(listOfFiles[i].getName(),image);

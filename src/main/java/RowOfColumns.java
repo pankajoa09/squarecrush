@@ -8,7 +8,7 @@ import java.util.ArrayList;
  */
 public class RowOfColumns {
 
-
+    Debug debug = new Debug();
 
     private ArrayList<ColumnOfBlocks> containingColumns = new ArrayList<ColumnOfBlocks>();
 
@@ -37,55 +37,46 @@ public class RowOfColumns {
             this.getColumnOfBlocks(block.getColumnNumber()).removeBlock(block);
         }
         else{
-            System.out.println("couldn't remove block because it doesn't exist");
+            System.out.println("invalid position for a block");
+            debug.printBlock(block);
+        }
+    }
+
+    public void removeAllBlocks(ArrayList<Block> toBeRemoved){
+        for (Block block: toBeRemoved){
+            this.removeBlock(block);
         }
     }
 
 
 
 
-    public Block getBlockNew(int columnNumber, int positionInColumn){
+    public Block getBlock(int columnNumber, int positionInColumn){
         Block ans = new Block();
         if (blockLocationIsValid(columnNumber,positionInColumn)){
             Block block = getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
             ans = block;
         }
-        else{
-            Block block = new Block();
-            block.createRandomBlock(-100,-100,3);
-            ans = block;
-        }
+        //else{
+            //System.out.println("block doesn't exist there, creating a NULLBLOCK");
+            //Block block = new Block();
+            //block.createNullBlock(-100,-100);
+            //ans = block;
+        //}
         return ans;
     }
 
-    private Boolean blockLocationIsValid(int columnNumber, int positionInColumn){
+    private boolean blockLocationIsValid(int columnNumber, int positionInColumn){
         int rowSize = this.getContainingColumns().size();
-        Boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
+        //System.out.println("rowSize "+rowSize);
+        boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
         int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
-        Boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
+        //System.out.println("columnSize "+columnSize);
+        boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
         return (matchesColumnNumberConstraint && matchesPositionInColumnConstraint);
     }
 
-    public Block getBlock(int columnNumber, int positionInColumn){
-        Debug debug = new Debug();
 
-        Block block = new Block();
-        int rowSize = this.getContainingColumns().size();
-        Boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
-        if (matchesColumnNumberConstraint) {
-            int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
-            Boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
-            if (matchesPositionInColumnConstraint) {
-                block = getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
-            } else {
-                block.createRandomBlock(-100, -100, 3);
-            }
-        }
-        else{
-            block.createRandomBlock(-100,-100,3);
-        }
-        return block;
-    }
 
     public ColumnOfBlocks getColumnOfBlocks(int columnNumber){
         ColumnOfBlocks columnOfBlocks = new ColumnOfBlocks();
