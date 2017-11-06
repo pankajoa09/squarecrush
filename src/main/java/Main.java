@@ -15,7 +15,12 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        Controller controller = new Controller(primaryStage);
+        //Controller controller = new Controller(primaryStage);
+        Testing testing = new Testing();
+        //testing.testApplyGravityToColumnOfBlocks();
+        //testing.testAddingToColumn();
+        testing.testThreesARow();
+
 
     }
 

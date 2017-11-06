@@ -112,7 +112,7 @@ public class Service{
         //they are in the same column and one apart
         boolean verticalSwap = inSameColumn && Math.abs(firstClick.getPositionInColumn()-secondClick.getPositionInColumn())==1;
 
-        if (horizontalSwap) {
+        if (horizontalSwap || verticalSwap) {
             Block first = rowOfColumns.getBlock(firstClick.getColumnNumber(),firstClick.getPositionInColumn());
             Block second = rowOfColumns.getBlock(secondClick.getColumnNumber(),secondClick.getPositionInColumn());
             BlockImage firstImage = first.getBlockImage();
@@ -186,72 +186,47 @@ public class Service{
         return blocksToDestroy;
     }
 
-    private ArrayList<Block> threeOrMoreInAColumnOLD(ColumnOfBlocks columnOfBlocks){
+
+
+
+
+
+
+
+
+    public ArrayList<Block> threeOrMoreInAColumn(ColumnOfBlocks columnOfBlocks){
         int theNumber = 3;
-        ArrayList<Block> ans = new ArrayList<Block>();
-        for (int i=0; i< columnOfBlocks.getContainingBlocks().size();i++){
-            Block currBlock = columnOfBlocks.getBlock(i);
-            ArrayList<Block> blockList = new ArrayList<Block>();
-            for (int j=i; j< columnOfBlocks.getContainingBlocks().size();j++){
-                Block nextBlock = columnOfBlocks.getBlock(j);
-                if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
-                    blockList.add(nextBlock);
-                }
-            }
-            if (blockList.size()>=theNumber){
-                ans.addAll(blockList);
-            }
-        }
-        return ans;
-    }
-
-    private ArrayList<Block> threeOrMoreInARowOLD(RowOfBlocks rowOfBlocks){
-        int theNumber = 3;
-        ArrayList<Block> ans = new ArrayList<Block>();
-        for (int i=0; i< rowOfBlocks.getContainingBlocks().size();i++){
-            Block currBlock = rowOfBlocks.getBlockHori(i);
-            ArrayList<Block> blockList = new ArrayList<Block>();
-            for (int j=i; j< rowOfBlocks.getContainingBlocks().size();j++){
-                Block nextBlock = rowOfBlocks.getBlockHori(j);
-                if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
-                    blockList.add(nextBlock);
-                }
-            }
-            if (blockList.size()>=theNumber){
-                ans.addAll(blockList);
-            }
-        }
-        return ans;
-    }
-
-
-
-
-
-    private ArrayList<Block> threeOrMoreInAColumn(ColumnOfBlocks columnOfBlocks){
-        int theNumber = 4;
         ArrayList<Block> ans = new ArrayList<Block>();
         //dont want duplication
         Set<Block> blockList = new HashSet<Block>();
         for (int i=0; i< columnOfBlocks.getContainingBlocks().size()-1;i++) {
             Block currBlock = columnOfBlocks.getBlock(i);
             Block nextBlock = columnOfBlocks.getBlock(i+1);
+
             //the one next is the same
-            if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
-                blockList.add(currBlock);
-                blockList.add(nextBlock);
-            }
-            else if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))){
+            if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))){
                 if (blockList.size() >= theNumber){
                     ans.addAll(blockList);
                 }
                 blockList.clear();
             }
+            else if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
+                blockList.add(currBlock);
+                blockList.add(nextBlock);
+            }
+
+
         }
 
-        ans.addAll(blockList);
+        if (blockList.size() >= theNumber){
+            ans.addAll(blockList);
+        }
+
+
+
         return ans;
     }
+
 
     private ArrayList<Block> threeOrMoreInARow(RowOfBlocks columnOfBlocks){
         int theNumber = 4;
@@ -278,6 +253,7 @@ public class Service{
         ans.addAll(blockList);
         return ans;
     }
+
 
 
 

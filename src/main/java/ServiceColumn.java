@@ -9,13 +9,18 @@ public class ServiceColumn {
 
     public ColumnOfBlocks applyGravityToColumnOfBlocks(ColumnOfBlocks currColumn){
         int si = 1;
-        System.out.println("preCRUNCH");
-        for (Block block: currColumn.getContainingBlocks()){
-            debug.printBlock(block);
-        }
         for (int fi=0; fi < currColumn.getContainingBlocks().size()-1;fi++){
+            //System.out.println("preCRUNCH");
+            //System.out.println("---------");
+            for (Block block: currColumn.getContainingBlocks()){
+                debug.printBlock(block);
+            }
             Block curr = currColumn.getContainingBlocks().get(fi);
             Block next = currColumn.getContainingBlocks().get(si);
+            //System.out.println("----ITER");
+            //debug.printBlock(curr);
+            //debug.printBlock(next);
+            //System.out.println("----");
             // if they aren't one after the other then there is a gap
             if (!(next.getPositionInColumn()-curr.getPositionInColumn()==1)){
                 int howMany = (next.getPositionInColumn()-curr.getPositionInColumn())-1;
@@ -33,26 +38,27 @@ public class ServiceColumn {
             }
             si++;
         }
-        System.out.println("postCRUNCH:");
-        for (Block block: currColumn.getContainingBlocks()){
-            debug.printBlock(block);
-        }
+//        System.out.println("postCRUNCH:");
+//        System.out.println("----------");
+//        for (Block block: currColumn.getContainingBlocks()){
+//            debug.printBlock(block);
+        //}
 
         Block lastBlock = currColumn.getContainingBlocks().get(currColumn.getContainingBlocks().size()-1);
 
         boolean isLastBlockAtFloor = lastBlock.getPositionInColumn()==4;
         if (!isLastBlockAtFloor){
             System.out.println("moving the whole thing to the floor");
-            int howFarItIsFromTheFloor = lastBlock.getPositionInColumn()-4;
+            int howFarItIsFromTheFloor = 4-lastBlock.getPositionInColumn();
             ColumnOfBlocks adjustedColumn = new ColumnOfBlocks();
             ArrayList<Block> adjustedBlocks = shiftDownBlocks(currColumn.getContainingBlocks(),howFarItIsFromTheFloor);
             adjustedColumn.addAllBlocks(adjustedBlocks);
             currColumn = adjustedColumn;
         }
-        System.out.println("postGRAVITY:");
-        for (Block block: currColumn.getContainingBlocks()) {
-            debug.printBlock(block);
-        }
+        //System.out.println("postGRAVITY:");
+        //for (Block block: currColumn.getContainingBlocks()) {
+//            debug.printBlock(block);
+//        }
 
         return currColumn;
     }

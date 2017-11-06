@@ -1,7 +1,7 @@
 /**
  * Created by pjoa09 on 11/3/17.
  */
-public class RowOfBlocks extends ColumnOfBlocks {
+public class RowOfBlocks extends VectorOfBlocks {
 
     public Block getBlockHori(int columnNumber){
         Block ans = new Block();

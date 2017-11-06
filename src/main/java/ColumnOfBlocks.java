@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by pjoa09 on 9/26/17.
@@ -20,7 +21,9 @@ public class ColumnOfBlocks {
     }
 
     public ArrayList<Block> getContainingBlocks() {
-        return containingBlocks;
+        Collections.sort(this.containingBlocks, (Block s1, Block s2) ->
+            (s1.getPositionInColumn() - s2.getPositionInColumn()));
+        return this.containingBlocks;
     }
 
     public void setContainingBlocks(ArrayList<Block> containingBlocks) {
@@ -30,6 +33,7 @@ public class ColumnOfBlocks {
     public void addBlock(Block block){
         if (!this.containingBlocks.contains(block)) {
             this.containingBlocks.add(block);
+
         }
     }
 
