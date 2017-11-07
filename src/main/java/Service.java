@@ -227,6 +227,40 @@ public class Service{
         return ans;
     }
 
+    public ArrayList<Block> threeOrMore(ArrayList<Block> vectorOfBlocks){
+        int theNumber = 3;
+        ArrayList<Block> ans = new ArrayList<Block>();
+        //dont want duplication
+        Set<Block> blockList = new HashSet<Block>();
+        for (int i=0; i< vectorOfBlocks.size()-1;i++) {
+            Block currBlock = vectorOfBlocks.get(i);
+            Block nextBlock = vectorOfBlocks.get(i+1);
+
+            //the one next is the same
+            if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))){
+                System.out.print("");
+                if (blockList.size() >= theNumber){
+                    ans.addAll(blockList);
+                }
+                blockList.clear();
+            }
+            else if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
+                blockList.add(currBlock);
+                blockList.add(nextBlock);
+            }
+
+
+        }
+
+        if (blockList.size() >= theNumber){
+            ans.addAll(blockList);
+        }
+
+
+
+        return ans;
+    }
+
 
     private ArrayList<Block> threeOrMoreInARow(RowOfBlocks columnOfBlocks){
         int theNumber = 4;
@@ -234,8 +268,8 @@ public class Service{
         //dont want duplication
         Set<Block> blockList = new HashSet<Block>();
         for (int i=0; i< columnOfBlocks.getContainingBlocks().size()-1;i++) {
-            Block currBlock = columnOfBlocks.getBlockHori(i);
-            Block nextBlock = columnOfBlocks.getBlockHori(i+1);
+            Block currBlock = columnOfBlocks.getBlock(i);
+            Block nextBlock = columnOfBlocks.getBlock(i+1);
             //the one next is the same
             if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
                 blockList.add(currBlock);
@@ -253,11 +287,6 @@ public class Service{
         ans.addAll(blockList);
         return ans;
     }
-
-
-
-
-
 
 
 
