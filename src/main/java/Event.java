@@ -13,7 +13,7 @@ public class Event {
     Debug debug = new Debug();
     Engine engine = new Engine();
     Service service = new Service();
-    private static Clicks clicks = new Clicks();
+    private final static Clicks clicks = new Clicks();
 
 
 
@@ -30,15 +30,19 @@ public class Event {
             clicklist.add(clicks.getSecondClick());
             debug.printArrayInRowOfColumns(clicklist,rowOfColumns);
 
+            Animated animated = new Animated();
             Block firstClick = clicks.getFirstClick();
             Block secondClick = clicks.getSecondClick();
-            Animated animated = service.updateAnimated(firstClick,secondClick,rowOfColumns);
+            Clicks click = new Clicks();
+            click.setFirstClick(firstClick);
+            click.setSecondClick(secondClick);
+            animated.setClicks(click);
+            animated.setRowOfColumns(rowOfColumns);
+            animated = service.swapAndUpdate(animated);
+
             clicks.setFirstClick(null);
             clicks.setSecondClick(null);
             ans = animated;
-
-
-
         }
         else{
             System.out.println("is first click");
@@ -55,6 +59,13 @@ public class Event {
         }
         return answer;
     }
+
+    public Animated generalHandler(RowOfColumns rowOfColumns){
+        Animated animated = new Animated();
+        animated.setRowOfColumns(rowOfColumns);
+        return service.update(animated);
+    }
+
 
 
 

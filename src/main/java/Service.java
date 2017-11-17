@@ -26,69 +26,48 @@ public class Service{
 
 
 
-    public Animated update(RowOfColumns rowOfColumns){
+    public Animated update(Animated animated){
+        RowOfColumns rowOfColumns = animated.getRowOfColumns();
         ArrayList<Block> toDestroy = getBlocksToDestroy(rowOfColumns);
         ArrayList<Block> blocksThatWillFall = getBlocksThatWillFall(toDestroy,rowOfColumns);
         rowOfColumns = destroyBlocks(rowOfColumns,toDestroy);
         rowOfColumns = applyGravityToRowOfColumns(rowOfColumns);
         ArrayList<Block> replacementBlocks = createReplacementBlocks(rowOfColumns);
         rowOfColumns = addReplacementBlocksToRowOfColumns(replacementBlocks,rowOfColumns);
-        Animated animated = new Animated();
-        animated.addAllToDestroy(toDestroy);
+        animated.setToDestroy(toDestroy);
         animated.setRowOfColumns(rowOfColumns);
-        animated.addAllToPlaceOnTop(replacementBlocks);
-        animated.addAllToFall(blocksThatWillFall);
+        animated.setToPlaceOnTop(replacementBlocks);
+        animated.setToFall(blocksThatWillFall);
         return animated;
     }
 
-    public Animated updateAnimated(Block firstClick, Block secondClick, RowOfColumns rowOfColumns){
+    public Animated swapAndUpdate(Animated animated){
 
-        Animated returned = new Animated();
-        RowOfColumns hypoRowOfColumns = rowOfColumns.clone();
+        RowOfColumns rowOfColumns = animated.getRowOfColumns();
+        System.out.println("ITS STILL HERE: SEE?");
+        debug.printRowOfColumns(rowOfColumns);
 
-        ArrayList<Block> arbit = new ArrayList<Block>();
-
-
-        arbit.add(firstClick);
-        arbit.add(secondClick);
-
+        Block firstClick = animated.getClicks().getFirstClick();
+        Block secondClick = animated.getClicks().getSecondClick();
 
         Boolean swapPossible = isSwapPossible(firstClick,secondClick,rowOfColumns);
         if (swapPossible){
-            Animated animated = new Animated();
-            animated.getClicks().setFirstClick(firstClick);
-            animated.getClicks().setSecondClick(secondClick);
             rowOfColumns = applySwap(firstClick,secondClick,rowOfColumns);
-            ArrayList<Block> toDestroy = getBlocksToDestroy(rowOfColumns);
-            ArrayList<Block> blocksThatWillFall = getBlocksThatWillFall(toDestroy,rowOfColumns);
-            rowOfColumns = destroyBlocks(rowOfColumns,toDestroy);
-            rowOfColumns = applyGravityToRowOfColumns(rowOfColumns);
-            ArrayList<Block> replacementBlocks = createReplacementBlocks(rowOfColumns);
-            rowOfColumns = addReplacementBlocksToRowOfColumns(replacementBlocks,rowOfColumns);
-
-            animated.getClicks().setFirstClick(firstClick);
-            animated.getClicks().setSecondClick(secondClick);
-            animated.addAllToDestroy(toDestroy);
             animated.setRowOfColumns(rowOfColumns);
-            animated.addAllToPlaceOnTop(replacementBlocks);
-            animated.addAllToFall(blocksThatWillFall);
-            returned = animated;
-
+            animated = update(animated);
         }
         else{
             System.out.println("Swap not possible");
-            Animated animated = new Animated();
-            returned = animated;
             //I dont know really. G
         }
-        return returned;
+
+
+        return animated;
     }
 
     public ArrayList<Block> getBlocksThatWillFall(ArrayList<Block> destroyed, RowOfColumns rowOfColumns){
         ArrayList<Block> blocksThatFall = new ArrayList<Block>();
-        System.out.println("WESTSIDEEE");
         for (ColumnOfBlocks columnOfBlocks: rowOfColumns.getContainingColumns()){
-            System.out.println("HEY HEY");
             for (Block block: columnOfBlocks.getContainingBlocks()){
                 if (destroyed.contains(block)){
                     Block max = block;

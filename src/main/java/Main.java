@@ -15,11 +15,19 @@ public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
 
-        //Controller controller = new Controller(primaryStage);
-        Testing testing = new Testing();
+        Controller controller = new Controller(primaryStage);
+        //Testing testing = new Testing();
         //testing.testApplyGravityToColumnOfBlocks();
         //testing.testAddingToColumn();
-        testing.testThreesARow();
+        //testing.testThreesARow();
+        //testing.testThrees();
+        //testing.testGetBlocksToDestroy();
+        //testing.testDestroyBlocks();
+        //testing.testReplaceBlocks();
+        //testing.testApplyCrunch();
+        //testing.testGetBlock();
+        //testing.testClone();
+
 
 
     }

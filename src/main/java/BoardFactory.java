@@ -3,12 +3,12 @@
 /**
  * Created by pjoa09 on 10/18/17.
  */
-public class BoardFactory {
+public class BoardFactory implements Cloneable {
 
     private final static int MAX_OBJECTS = 3;
     private final static int WIDTH = 5;
     private final static int HEIGHT = 5;
-    private final static int BLOCK_IMAGE_POOL_SIZE = 8;
+    private final static int BLOCK_IMAGE_POOL_SIZE = 3;
 
 
 
@@ -39,6 +39,7 @@ public class BoardFactory {
 
         for (ColumnOfBlocks column : rowOfColumns.getContainingColumns()){
             ColumnOfBlocks cloneColumn = new ColumnOfBlocks();
+            cloneColumn.setPositionInRowOfColumns(column.getPositionInRowOfColumns());
             for (Block block : column.getContainingBlocks()){
                 Block cloneBlock = new Block();
                 BlockImage cloneBlockImage = new BlockImage();

@@ -2,6 +2,7 @@ import com.sun.rowset.internal.Row;
 import javafx.scene.layout.BorderPane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 /**
  * Created by pjoa09 on 9/26/17.
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 public class RowOfColumns {
 
     Debug debug = new Debug();
+
+    private static int MAX_HEIGHT = 5;
 
     private ArrayList<ColumnOfBlocks> containingColumns = new ArrayList<ColumnOfBlocks>();
 
@@ -20,8 +23,11 @@ public class RowOfColumns {
         this.containingColumns.remove(columnOfBlocks);
     }
 
+
     public ArrayList<ColumnOfBlocks> getContainingColumns() {
-        return containingColumns;
+        Collections.sort(this.containingColumns, (ColumnOfBlocks s1, ColumnOfBlocks s2) ->
+                (s1.getPositionInRowOfColumns() - s2.getPositionInRowOfColumns()));
+        return this.containingColumns;
     }
 
     public void setContainingColumns(ArrayList<ColumnOfBlocks> containingColumns) {
@@ -37,7 +43,7 @@ public class RowOfColumns {
             this.getColumnOfBlocks(block.getColumnNumber()).removeBlock(block);
         }
         else{
-            System.out.println("invalid position for a block");
+            System.out.print("invalid position for a block:");
             debug.printBlock(block);
         }
     }
@@ -70,7 +76,8 @@ public class RowOfColumns {
         int rowSize = this.getContainingColumns().size();
         //System.out.println("rowSize "+rowSize);
         boolean matchesColumnNumberConstraint = (columnNumber >= 0) && (columnNumber < rowSize);
-        int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
+        //int columnSize = this.getColumnOfBlocks(columnNumber).getContainingBlocks().size();
+        int columnSize = MAX_HEIGHT;
         //System.out.println("columnSize "+columnSize);
         boolean matchesPositionInColumnConstraint = (positionInColumn >= 0) && (positionInColumn < columnSize);
         return (matchesColumnNumberConstraint && matchesPositionInColumnConstraint);

@@ -1,3 +1,5 @@
+
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -5,6 +7,8 @@ import java.util.Collections;
  * Created by pjoa09 on 9/26/17.
  */
 public class ColumnOfBlocks {
+
+
 
     Debug debug = new Debug();
 
@@ -22,7 +26,7 @@ public class ColumnOfBlocks {
 
     public ArrayList<Block> getContainingBlocks() {
         Collections.sort(this.containingBlocks, (Block s1, Block s2) ->
-            (s1.getPositionInColumn() - s2.getPositionInColumn()));
+                (s1.getPositionInColumn() - s2.getPositionInColumn()));
         return this.containingBlocks;
     }
 
@@ -47,28 +51,24 @@ public class ColumnOfBlocks {
 
     public void removeBlock(Block block){
         this.containingBlocks.remove(block);
-        Block nullBlock = new Block();
+
     }
 
-    public Block getBlock(int positionInColumn){
+
+    public Block getBlock(int positionInColumn) {
         Block ans = new Block();
-        //ans.createNullBlock(positionInColumn,this.positionInRowOfColumns);
-        for (Block block : this.containingBlocks){
-            if (block.getPositionInColumn() == positionInColumn){
-                ans = block;
-                break;
+        //System.out.println("----getblock---");
+        for (Block poss : this.getContainingBlocks()) {
+            //debug.printBlock(poss);
+            if (poss.getPositionInColumn() == positionInColumn) {
+                    ans = poss;
             }
         }
+        //System.out.println("----getblockEND---");
+        //System.out.print("ANS:");
+        //debug.printBlock(ans);
         return ans;
     }
-
-
-
-
-
-
-
-
 
 
 }
