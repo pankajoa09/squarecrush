@@ -27,6 +27,8 @@ public class Main extends Application {
         //testing.testApplyCrunch();
         //testing.testGetBlock();
         //testing.testClone();
+        //testing.testGetToFallNew();
+        //testing.testFall();
 
 
 

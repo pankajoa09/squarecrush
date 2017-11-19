@@ -24,7 +24,7 @@ public class Controller {
 
     public RowOfColumns newGame(){
         System.out.println("new game called");
-        RowOfColumns rowOfColumns = boardFactory.createRowOfColumns();
+        RowOfColumns rowOfColumns = boardFactory.createCleanRowOfColumns();
         //debug.showBlockOnGrid(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(), rowOfColumns);
         return rowOfColumns;
     }

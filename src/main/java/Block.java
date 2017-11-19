@@ -17,7 +17,26 @@ public class Block {
     private int positionInColumn; // j
     private int columnNumber; // i
     private BlockImage blockImage;
+    private int shiftDown;
 
+
+
+
+    public int getShiftDown(){
+        return shiftDown;
+    }
+
+    public void incrementShiftDown(int howMuch){
+        this.shiftDown = this.shiftDown+howMuch;
+    }
+
+    public void setShiftDown(int howMuch){
+        this.shiftDown= howMuch;
+    }
+
+    public boolean didBlockShiftDown(){
+        return this.shiftDown != 0;
+    }
 
     public int getPositionInColumn() {
         return positionInColumn;

@@ -72,6 +72,7 @@ public class View {
         //primaryStage.setMinWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
 
         GridPane rowOfColumnsPane = refreshRowOfColumnsPane(rowOfColumns);
+
         mainGridPane.add(rowOfColumnsPane,2,2);
         stackPane.getChildren().clear();
         stackPane.getChildren().addAll(mainGridPane);
@@ -93,13 +94,12 @@ public class View {
     public void refreshMainGrid(Animated animated){
         mainGridPane.getChildren().clear();
         mainGridPane.getChildren().removeAll();
-        //debug.printBlock(animated.getClicks().getFirstClick());
-        ///System.out.println("THIS IS WHAT REFRESHMAINGRIDANIMATOR GETS:");
-        debug.printRowOfColumns(animated.getRowOfColumns());
+        //System.out.println("THIS IS WHAT REFRESHMAINGRIDANIMATOR GETS:");
+        //debug.printRowOfColumns(animated.getRowOfColumns());
         mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),2,2);
         Event event = new Event();
         animated = event.generalHandler(animated.getRowOfColumns());
-        animator(animated);
+        animateFadeOutBlocks(animated);
 
         //mainGridPane.setTranslateY(-200);
     }
@@ -154,10 +154,10 @@ public class View {
         rectanglePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
                 Event event = new Event();
-                Animated animated = event.rectangleBlockClickHandler(columnNumber,positionInColumn,rowOfColumns);
+                Animated animated = event.swapHandler(columnNumber,positionInColumn,rowOfColumns);
                 if (animated.getClicks().getSecondClick() != null) {
                     System.out.println("SECOND CLICKE!");
-                    animator(animated);
+                    animateSwapBlocks(animated);
                 }
             }
         });
@@ -213,11 +213,14 @@ public class View {
         }
 
 
+
         final Animated finalAnimated = animated;
         timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                System.out.println("Swap ended");
-                animateFadeBlocks(finalAnimated);
+//                System.out.println("Swap ended");
+                refreshMainGrid(finalAnimated);
+
+                //animateFadeBlocks(finalAnimated);
 
             }
         });
@@ -226,15 +229,26 @@ public class View {
         //timer.start();
     }
 
-    private void animateFadeBlocks(Animated animated){
+    private void animateFadeOutBlocks(Animated animated){
 
         for (Block destroy: animated.getToDestroy()){
-            fade(getRectangleFromBlock(destroy),animated);
+            fadeOut(getRectangleFromBlock(destroy),animated);
         }
 
     }
 
-    private void fallDown(StackPane rectangle, int howFar, int ind, int smth, Animated animated){
+    private void animateFadeInBlocks(Animated animated){
+        for (Block create: animated.getToPlaceOnTop()){
+            StackPane rectangle = refreshBlockRectangle(create,animated.getRowOfColumns());
+            fadeIn(rectangle,animated);
+            //fadeIn(getRectangleFromBlock(create),animated);
+        }
+    }
+
+
+
+
+    private void fallDown(StackPane rectangle, int howFar, int ind, Animated animated){
         //rectangle.setEffect(new Lighting());
         timeline = new Timeline();
         timeline.setCycleCount(1);
@@ -247,14 +261,14 @@ public class View {
         KeyFrame keyFrame = new KeyFrame(duration , keyValueX, keyValueY);
         //add the keyframe to the timeline
         timeline.getKeyFrames().add(keyFrame);
-        final int Ind = ind;
-        final int Smth = smth;
         final Animated finalAnimated = animated;
+        final int Ind = ind;
         timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                if (Ind==Smth) {
+                if (Ind==1) {
                     System.out.println("Fall Down ended");
                     debug.printRowOfColumns(finalAnimated.getRowOfColumns());
+                    //animateFadeInBlocks(finalAnimated);
                     refreshMainGrid(finalAnimated);
 
                     //stackPane.getChildren().clear();
@@ -272,19 +286,19 @@ public class View {
 
     private void animateFallDownBlocks(Animated animated){
 
+
+        System.out.println("ALL THOSE THAT WOULD FALL");
         int ind = 0;
+        debug.printArrayInRowOfColumns(animated.getToFall(),animated.getRowOfColumns());
         for (Block fall : animated.getToFall()){
-            int howMuch = howManyFadedBelow(animated.getToDestroy(),fall);
-            int pos = fall.getPositionInColumn();
-            int col = fall.getColumnNumber();
-            fallDown(getRectangle(pos,col),howMuch,ind,animated.getToFall().size()-1,animated);
+            fallDown(getRectangleFromBlock(fall),fall.getShiftDown(),ind, animated);
             ind++;
         }
     }
 
 
 
-    private void fade(StackPane rectangle, Animated animated){
+    private void fadeOut(StackPane rectangle, Animated animated){
         FadeTransition ft = new FadeTransition(Duration.millis(500), rectangle);
         ft.setFromValue(1.0);
         ft.setToValue(0);
@@ -292,49 +306,28 @@ public class View {
         ft.setAutoReverse(true);
         ft.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
-                System.out.println("Fade ended");
+                //System.out.println("Fade Out ended");
                 animateFallDownBlocks(animated);
             }
         });
         ft.play();
     }
 
-
-
-    public void animator(Animated animated){
-        System.out.println("ANIMATOR CALLED");
-        ArrayList<Block> toDestroy = animated.getToDestroy();
-        ArrayList<Block> fallDowns = animated.getToFall();
-        ArrayList<Block> toPlaceOnTops = animated.getToPlaceOnTop();
-        fallDowns.addAll(toPlaceOnTops);
-
-        Block click1 = animated.getClicks().getFirstClick();
-        Block click2 = animated.getClicks().getSecondClick();
-
-        if ((click1 != null) && (click2 != null) && (!animated.getToDestroy().isEmpty())) {
-            System.out.println("going to swap");
-            debug.printBlock(click1);
-            debug.printBlock(click2);
-            animateSwapBlocks(animated);
-        }
-
-
-        //mainGridPane.getChildren().clear();
-        //mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),1,1);
-    }
-
-    public int howManyFadedBelow(ArrayList<Block> fadeOuts, Block targetBlock){
-        int count = 0;
-        for (Block block: fadeOuts){
-            if (block.getColumnNumber()==targetBlock.getColumnNumber()){
-                if(block.getPositionInColumn()>targetBlock.getPositionInColumn()){
-                    count++;
-                }
+    private void fadeIn(StackPane rectangle, Animated animated){
+        FadeTransition ft = new FadeTransition(Duration.millis(500), rectangle);
+        ft.setFromValue(0);
+        ft.setToValue(1);
+        ft.setCycleCount(1);
+        ft.setAutoReverse(true);
+        ft.onFinishedProperty().set(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                //System.out.println("Fade In ended");
+                refreshMainGrid(animated);
             }
-        }
-        //System.out.println("how many faded: "+count);
-        return count;
+        });
+        ft.play();
     }
+
 
 
     public StackPane getRectangleFromBlock(Block block){

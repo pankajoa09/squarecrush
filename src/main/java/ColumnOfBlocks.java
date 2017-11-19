@@ -35,10 +35,19 @@ public class ColumnOfBlocks {
     }
 
     public void addBlock(Block block){
-        if (!this.containingBlocks.contains(block)) {
+        if ((!this.containingBlocks.contains(block)) && (block.getColumnNumber()==this.getPositionInRowOfColumns())) {
             this.containingBlocks.add(block);
-
         }
+        else if (this.containingBlocks.contains(block)){
+            System.out.print("block exists in column ");
+            debug.printBlock(block);
+        }
+        else if (block.getColumnNumber()!=this.getPositionInRowOfColumns()){
+            System.out.print("block doesn't belong to the column number: "+this.getPositionInRowOfColumns()+" ");
+            debug.printBlock(block);
+        }
+
+
     }
 
 
@@ -53,6 +62,14 @@ public class ColumnOfBlocks {
         this.containingBlocks.remove(block);
 
     }
+
+    public void removeAllBlocks(ArrayList<Block> blocks){
+        for (Block block : blocks) {
+            this.removeBlock(block);
+        }
+    }
+
+
 
 
     public Block getBlock(int positionInColumn) {

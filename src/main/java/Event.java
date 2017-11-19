@@ -17,7 +17,7 @@ public class Event {
 
 
 
-    public Animated rectangleBlockClickHandler(int columnNumber, int positionInColumn, RowOfColumns rowOfColumns){
+    public Animated swapHandler(int columnNumber, int positionInColumn, RowOfColumns rowOfColumns){
         Animated ans = new Animated();
         Block clicked = rowOfColumns.getBlock(columnNumber,positionInColumn);
         if (isSecondClick(clicked)){
@@ -38,7 +38,7 @@ public class Event {
             click.setSecondClick(secondClick);
             animated.setClicks(click);
             animated.setRowOfColumns(rowOfColumns);
-            animated = service.swapAndUpdate(animated);
+            animated = service.swap(animated);
 
             clicks.setFirstClick(null);
             clicks.setSecondClick(null);

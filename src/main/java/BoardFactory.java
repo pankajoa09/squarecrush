@@ -13,6 +13,7 @@ public class BoardFactory implements Cloneable {
 
 
     public RowOfColumns createRowOfColumns(){
+
         RowOfColumns rowOfColumns = new RowOfColumns();
         //populate rowofcolumns with columns
         for (int i=0; i<WIDTH;i++){
@@ -31,6 +32,21 @@ public class BoardFactory implements Cloneable {
 
         //debug.printArrayInRowOfColumns(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(),rowOfColumns);
         return rowOfColumns;
+    }
+
+    public RowOfColumns createCleanRowOfColumns(){
+        System.out.println("creating clean rowOfColumns");
+        Service service = new Service();
+        RowOfColumns rowOfColumns = createRowOfColumns();
+        while (true) {
+            if (service.getBlocksToDestroy(rowOfColumns).isEmpty()) {
+                System.out.println("done");
+                return rowOfColumns;
+            } else {
+                System.out.println("...");
+                service.destroyAndReplaceBlocks(rowOfColumns);
+            }
+        }
     }
 
     public RowOfColumns createRowOfColumnsClone(RowOfColumns rowOfColumns){

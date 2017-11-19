@@ -1,4 +1,7 @@
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Created by pjoa09 on 10/24/17.
@@ -10,75 +13,75 @@ public class ServiceColumn {
     private static final int MAX_HEIGHT = 5;
     private static final int POOL_SIZE = 3;
 
-    public ColumnOfBlocks applyGravityToColumnOfBlocks(ColumnOfBlocks currColumn){
-        //System.out.println("old: "+currColumn.getPositionInRowOfColumns());
-        currColumn = applyCrunchToColumnOfBlocks(currColumn);
-        //System.out.println("new1: "+currColumn.getPositionInRowOfColumns());
-        currColumn = applyDropToColumnOfBlocks(currColumn);
-        //System.out.println("new2: "+currColumn.getPositionInRowOfColumns());
-        return currColumn;
-    }
 
-    public ColumnOfBlocks applyCrunchToColumnOfBlocks(ColumnOfBlocks columnOfBlocks){
+
+
+
+    public ArrayList<Block> getFallingBlocks(ColumnOfBlocks columnOfBlocks){
         ColumnOfBlocks currColumn = columnOfBlocks;
         currColumn.setPositionInRowOfColumns(columnOfBlocks.getPositionInRowOfColumns());
+
         int si = 1;
-        for (int fi=0; fi < currColumn.getContainingBlocks().size()-1;fi++){
-            Block curr = currColumn.getContainingBlocks().get(fi);
-            Block next = currColumn.getContainingBlocks().get(si);
-            //System.out.println("----ITER");
-            // if they aren't one after the other then there is a gap
-            ColumnOfBlocks adjustedColumn = new ColumnOfBlocks();
-            adjustedColumn.setPositionInRowOfColumns(columnOfBlocks.getPositionInRowOfColumns());
-            if (!(next.getPositionInColumn()-curr.getPositionInColumn()==1)){
-                int howMany = (next.getPositionInColumn()-curr.getPositionInColumn())-1;
-                ArrayList<Block> blocksOnTop = getBlocksOnTopOfBlock(curr, currColumn);
-                blocksOnTop.add(curr);
-                ArrayList<Block> blocksOnBottom = getBlocksBottomOfBlock(next, currColumn);
-                blocksOnBottom.add(next);
-                ArrayList<Block> shiftedDownBlocksOnTop = shiftDownBlocks(blocksOnTop,howMany);
-                adjustedColumn.addAllBlocks(shiftedDownBlocksOnTop);
-                adjustedColumn.addAllBlocks(blocksOnBottom);
-                currColumn = adjustedColumn;
-                fi=0;
-                si=1;
-            }
-            si++;
-        }
-
-
-        return currColumn;
-    }
-
-    public ColumnOfBlocks applyDropToColumnOfBlocks(ColumnOfBlocks currColumn){
-        if (!(currColumn.getContainingBlocks().isEmpty())) {
+        Set<Block> blocksThatWillFall = new HashSet<>();
+        if (!currColumn.getContainingBlocks().isEmpty()) {
             Block lastBlock = currColumn.getContainingBlocks().get(currColumn.getContainingBlocks().size() - 1);
-            boolean isLastBlockAtFloor = lastBlock.getPositionInColumn() == 4;
-            if (!isLastBlockAtFloor) {
-                int howFarItIsFromTheFloor = 4 - lastBlock.getPositionInColumn();
-                ColumnOfBlocks adjustedColumn = new ColumnOfBlocks();
-                adjustedColumn.setPositionInRowOfColumns(currColumn.getPositionInRowOfColumns());
-                ArrayList<Block> adjustedBlocks = shiftDownBlocks(currColumn.getContainingBlocks(), howFarItIsFromTheFloor);
-                adjustedColumn.addAllBlocks(adjustedBlocks);
-                currColumn = adjustedColumn;
+
+            int howFarItIsFromTheFloor = 4 - lastBlock.getPositionInColumn();
+
+            if (currColumn.getContainingBlocks().size() == 1){
+                Block last = currColumn.getContainingBlocks().get(0);
+                last.incrementShiftDown(howFarItIsFromTheFloor);
+                blocksThatWillFall.add(last);
+            }
+            for (int fi = 0; fi < currColumn.getContainingBlocks().size() - 1; fi++) {
+
+                Block curr = currColumn.getContainingBlocks().get(fi);
+                Block next = currColumn.getContainingBlocks().get(si);
+                //System.out.println("----ITER");
+                // if they aren't one after the other then there is a gap
+
+                if (!(next.getPositionInColumn() - curr.getPositionInColumn() == 1) || next.equals(lastBlock)) {
+
+                    int howMany = (next.getPositionInColumn() - curr.getPositionInColumn()) - 1;
+
+                    ArrayList<Block> blocksOnTop = getBlocksOnTopOfBlock(curr, currColumn);
+                    blocksOnTop.add(curr);
+                    for (Block shift : blocksOnTop) {
+                        shift.incrementShiftDown(howMany);
+
+                    }
+
+                    if (next.equals(lastBlock)) {
+                        blocksOnTop.add(next);
+
+                        for (Block shit : blocksOnTop) {
+                            shit.incrementShiftDown(howFarItIsFromTheFloor);
+                        }
+                    }
+
+
+
+                    blocksThatWillFall.addAll(blocksOnTop);
+                }
+                si++;
             }
         }
-        return currColumn;
+        ArrayList<Block> ans = new ArrayList<>();
+        ans.addAll(blocksThatWillFall);
+        return ans;
     }
 
-    public ColumnOfBlocks moveBlockInColumnToTop(Block block, ColumnOfBlocks columnOfBlocks){
-        ColumnOfBlocks newColumn = new ColumnOfBlocks();
-        newColumn.setPositionInRowOfColumns(columnOfBlocks.getPositionInRowOfColumns());
-        ArrayList<Block> blocksOnTop = getBlocksOnTopOfBlock(block, columnOfBlocks);
-        ArrayList<Block> blocksOnBottom = getBlocksBottomOfBlock(block, columnOfBlocks);
-        ArrayList<Block> shiftBlocksOnTop = shiftDownBlocks(blocksOnTop,1);
-        newColumn.addAllBlocks(shiftBlocksOnTop);
-        newColumn.addAllBlocks(blocksOnBottom);
-        Block newBlock = new Block();
-        newBlock.createBlock(0,columnOfBlocks.getPositionInRowOfColumns(),block.getBlockImage());
-        newColumn.addBlock(newBlock);
-        return newColumn;
+    /*
+    public ColumnOfBlocks getColumnAfterBlocksFall(ArrayList<Block> fallers, ColumnOfBlocks columnOfBlocks){
+
     }
+    */
+
+
+
+
+
+
 
     public ArrayList<Block> getBlocksOnTopOfBlock(Block block, ColumnOfBlocks columnOfBlocks) {
         //System.out.println("");
@@ -93,7 +96,22 @@ public class ServiceColumn {
         return blocksOnTopOfBlock;
     }
 
-    public ArrayList<Block> shiftDownBlocks(ArrayList<Block> blocks, int shiftDownBy) {
+    public ColumnOfBlocks dropBlocksInToColumn(ArrayList<Block> allFaller, ColumnOfBlocks columnOfBlocks){
+        ArrayList<Block> faller = new ArrayList<>();
+        for (Block blk: allFaller){
+            if (blk.getColumnNumber()==columnOfBlocks.getPositionInRowOfColumns()){
+                faller.add(blk);
+            }
+        }
+        ArrayList<Block> fallen = shiftDownBlocksOnOwn(faller);
+        columnOfBlocks.removeAllBlocks(faller);
+        columnOfBlocks.addAllBlocks(fallen);
+        return columnOfBlocks;
+    }
+
+
+
+    public ArrayList<Block> shiftDownBlocksOnOwn(ArrayList<Block> blocks) {
         ArrayList<Block> shiftedDown = new ArrayList<Block>();
         //System.out.println("");
         //System.out.println("GET SHIFTED BLOCKS:");
@@ -101,7 +119,7 @@ public class ServiceColumn {
             for (Block block : blocks) {
                 BlockImage blockImage = block.getBlockImage();
                 Block shifted = new Block();
-                shifted.createBlock(block.getPositionInColumn() + shiftDownBy, block.getColumnNumber(), blockImage);
+                shifted.createBlock(block.getPositionInColumn() + block.getShiftDown(), block.getColumnNumber(), blockImage);
                 //debug.printBlock(shifted);
                 shiftedDown.add(shifted);
             }

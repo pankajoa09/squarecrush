@@ -109,9 +109,9 @@ public class Testing {
 
     public void testGetBlocksToDestroy(){
         RowOfColumns testRow = boardFactory.createRowOfColumns();
-        ArrayList<Block> dest = service.getBlocksToDestroy(testRow);
+        ArrayList<Block> dest = service.getBlocksToDestroyHorizontal(testRow);
 
-        //debug.printArrayInRowOfColumns(dest, testRow);
+        debug.printArrayInRowOfColumns(dest, testRow);
 
     }
 
@@ -164,6 +164,13 @@ public class Testing {
         for (Block block: results){
             debug.printBlock(block);
         }
+    }
+
+    public void testGetToFall(){
+        RowOfColumns testCol = boardFactory.createRowOfColumns();
+        ArrayList<Block> toDest = service.getBlocksToDestroy(testCol);
+        testCol = service.destroyBlocks(testCol,toDest);
+        testCol = service.applyGravityToRowOfColumns(testCol);
 
 
     }
@@ -180,8 +187,63 @@ public class Testing {
         System.out.println(service.didItChange(orig,fake));
 
 
+    }
+
+    public void testGetToFallNew(){
+        ColumnOfBlocks testCol = createColumn();
+
+        Block block0 = testCol.getBlock(0);
+        Block block1 = testCol.getBlock(1);
+        Block block2 = testCol.getBlock(2);
+        Block block3 = testCol.getBlock(3);
+        Block block4 = testCol.getBlock(4);
+
+
+        testCol.removeBlock(block0);
+        testCol.removeBlock(block1);
+        //testCol.removeBlock(block2);
+        //testCol.removeBlock(block3);
+        testCol.removeBlock(block4);
+
+
+        ArrayList<Block> fallers = serviceColumn.getFallingBlocks(testCol);
+        for (Block block: fallers){
+            System.out.print(block.getShiftDown()+ " ");
+            debug.printBlock(block);
+        }
+        System.out.println("----");
+        testCol = serviceColumn.dropBlocksInToColumn(fallers,testCol);
+        for (Block blk : testCol.getContainingBlocks()){
+            debug.printBlock(blk);
+        }
 
     }
+
+    public void testFall(){
+        RowOfColumns rowOfColumns =  boardFactory.createRowOfColumns();
+        ArrayList<Block> dest = service.getBlocksToDestroy(rowOfColumns);
+        System.out.println("destroy:");
+        debug.printArrayInRowOfColumns(dest,rowOfColumns);
+        rowOfColumns = service.destroyBlocks(rowOfColumns,dest);
+        System.out.println("destroyed:");
+        debug.printRowOfColumns(rowOfColumns);
+        ArrayList<Block> fallers = service.getFallingBlocks(rowOfColumns);
+        System.out.println("fallers:");
+        debug.printArrayInRowOfColumns(fallers,rowOfColumns);
+        for (Block block: fallers){
+            //System.out.print(block.getShiftDown()+ " ");
+            //debug.printBlock(block);
+        }
+        rowOfColumns = service.dropBlocksInToRowOfColumns(fallers,rowOfColumns);
+        System.out.println("postfall:");
+        debug.printRowOfColumns(rowOfColumns);
+
+
+
+
+    }
+
+
 
 
 
