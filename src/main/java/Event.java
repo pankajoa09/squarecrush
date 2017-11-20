@@ -17,7 +17,8 @@ public class Event {
 
 
 
-    public Animated swapHandler(int columnNumber, int positionInColumn, RowOfColumns rowOfColumns){
+    public Animated swapHandler(int columnNumber, int positionInColumn, Animated oldAnimated){
+        RowOfColumns rowOfColumns = oldAnimated.getRowOfColumns();
         Animated ans = new Animated();
         Block clicked = rowOfColumns.getBlock(columnNumber,positionInColumn);
         if (isSecondClick(clicked)){
@@ -60,7 +61,7 @@ public class Event {
         return answer;
     }
 
-    public Animated generalHandler(RowOfColumns rowOfColumns){
+    public Animated generalHandler(Animated oldAnimated){
         Animated animated = new Animated();
         animated.setRowOfColumns(rowOfColumns);
         return service.update(animated);

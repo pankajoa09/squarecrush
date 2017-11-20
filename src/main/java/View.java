@@ -1,7 +1,7 @@
 import com.sun.imageio.plugins.gif.GIFImageReader;
 import com.sun.org.apache.regexp.internal.RE;
-import com.sun.org.glassfish.gmbal.Impact;
-import com.sun.rowset.internal.Row;
+
+
 import javafx.animation.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,6 +19,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+
 
 import java.util.ArrayList;
 import java.util.Random;
@@ -96,7 +97,7 @@ public class View {
         mainGridPane.getChildren().removeAll();
         //System.out.println("THIS IS WHAT REFRESHMAINGRIDANIMATOR GETS:");
         //debug.printRowOfColumns(animated.getRowOfColumns());
-        mainGridPane.add(refreshRowOfColumnsPane(animated.getRowOfColumns()),2,2);
+        mainGridPane.add(refreshRowOfColumnsPane(animated),2,2);
         Event event = new Event();
         animated = event.generalHandler(animated.getRowOfColumns());
         animateFadeOutBlocks(animated);
@@ -104,27 +105,24 @@ public class View {
         //mainGridPane.setTranslateY(-200);
     }
 
-    public GridPane refreshRowOfColumnsPane(RowOfColumns rowOfColumns){
+    public GridPane refreshRowOfColumnsPane(RowOfColumns rowOfColumns, Animated animated){
         GridPane rowOfColumnsPane = new GridPane();
-        debug.printRowOfColumns(rowOfColumns);
 
         for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
             ColumnOfBlocks columnOfBlocks = rowOfColumns.getColumnOfBlocks(i);
-            GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks,rowOfColumns);
+            GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks, animated);
             rowOfColumnsPane.setColumnIndex(columnOfBlocksPane,i);
             rowOfColumnsPane.getChildren().addAll(columnOfBlocksPane);
         }
         return rowOfColumnsPane;
     }
 
-    private GridPane refreshColumnOfBlocksPane(ColumnOfBlocks columnOfBlocks, RowOfColumns rowOfColumns){
+    private GridPane refreshColumnOfBlocksPane(ColumnOfBlocks columnOfBlocks, Animated animated){
         GridPane columnOfBlocksPane = new GridPane();
-
-        System.out.println("");
 
         for (int i = 0; i < columnOfBlocks.getContainingBlocks().size();i++){
             Block block = columnOfBlocks.getBlock(i);
-            StackPane blockRectangle = refreshBlockRectangle(block,rowOfColumns);
+            StackPane blockRectangle = refreshBlockRectangle(block,animated);
             columnOfBlocksPane.setRowIndex(blockRectangle,i);
             columnOfBlocksPane.getChildren().addAll(blockRectangle);
         }
@@ -134,14 +132,18 @@ public class View {
     }
 
 
-    private StackPane refreshBlockRectangle(final Block block, final RowOfColumns rowOfColumns){
+    private StackPane refreshBlockRectangle(final Block block, Animated animated){
+
 
         final int columnNumber = block.getColumnNumber();
         final int positionInColumn = block.getPositionInColumn();
         final Rectangle blockRectangle = new Rectangle();
         blockRectangle.setHeight(BLOCK_RECTANGLE_SIZE);
         blockRectangle.setWidth(BLOCK_RECTANGLE_SIZE);
-        blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
+        if ()
+        else {
+            blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
+        }
         //blockRectangle.setFill(new Color(1,1,1,1));
         StackPane rectanglePane = new StackPane();
         //Label text = new Label((block.getPositionInColumn())+" "+block.getColumnNumber());
@@ -151,12 +153,13 @@ public class View {
         rectanglePane.getChildren().addAll(blockRectangle,text);
         final GridPane finalMainGridPane = this.mainGridPane;
         final Stage finalPrimaryStage = this.primaryStage;
+        final Animated finalAnimated = animated;
         rectanglePane.setOnMouseClicked(new EventHandler<MouseEvent>() {
             public void handle(MouseEvent t) {
                 Event event = new Event();
-                Animated animated = event.swapHandler(columnNumber,positionInColumn,rowOfColumns);
+                Animated animated = event.swapHandler(columnNumber,positionInColumn,finalAnimated);
                 if (animated.getClicks().getSecondClick() != null) {
-                    System.out.println("SECOND CLICKE!");
+                    System.out.println("second click");
                     animateSwapBlocks(animated);
                 }
             }
@@ -178,7 +181,7 @@ public class View {
         timeline = new Timeline();
         timeline.setCycleCount(1);
         timeline.setAutoReverse(true);
-        Duration duration = Duration.millis(1000);
+        Duration duration = Duration.millis(400);
 
         if (animated.getClicks().areClicksNextToEachOther()){
 
@@ -209,7 +212,7 @@ public class View {
 
         }
         else{
-            System.out.println("WHAT THE");
+            System.out.println("Somethings wrong with the click animation");
         }
 
 
@@ -229,15 +232,10 @@ public class View {
         //timer.start();
     }
 
-    private void animateFadeOutBlocks(Animated animated){
 
-        for (Block destroy: animated.getToDestroy()){
-            fadeOut(getRectangleFromBlock(destroy),animated);
-        }
-
-    }
 
     private void animateFadeInBlocks(Animated animated){
+
         for (Block create: animated.getToPlaceOnTop()){
             StackPane rectangle = refreshBlockRectangle(create,animated.getRowOfColumns());
             fadeIn(rectangle,animated);
@@ -256,7 +254,7 @@ public class View {
         KeyValue keyValueX = new KeyValue(rectangle.translateXProperty(), 0);
         KeyValue keyValueY = new KeyValue(rectangle.translateYProperty(), BLOCK_RECTANGLE_SIZE*howFar);
         //create a keyFrame, the keyValue is reached at time 2s
-        Duration duration = Duration.millis(2000);
+        Duration duration = Duration.millis(750);
         //one can add a specific action when the keyframe is reached
         KeyFrame keyFrame = new KeyFrame(duration , keyValueX, keyValueY);
         //add the keyframe to the timeline
@@ -265,9 +263,11 @@ public class View {
         final int Ind = ind;
         timeline.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
+
                 if (Ind==1) {
-                    System.out.println("Fall Down ended");
-                    debug.printRowOfColumns(finalAnimated.getRowOfColumns());
+
+                    //System.out.println("Fall Down ended");
+
                     //animateFadeInBlocks(finalAnimated);
                     refreshMainGrid(finalAnimated);
 
@@ -285,32 +285,43 @@ public class View {
 
 
     private void animateFallDownBlocks(Animated animated){
-
-
-        System.out.println("ALL THOSE THAT WOULD FALL");
-        int ind = 0;
-        debug.printArrayInRowOfColumns(animated.getToFall(),animated.getRowOfColumns());
-        for (Block fall : animated.getToFall()){
-            fallDown(getRectangleFromBlock(fall),fall.getShiftDown(),ind, animated);
-            ind++;
+        int ind = animated.getToFall().size();
+        if (!animated.getToFall().isEmpty()) {
+            for (Block fall : animated.getToFall()) {
+                fallDown(getRectangleFromBlock(fall), fall.getShiftDown(), ind, animated);
+                ind--;
+            }
         }
     }
 
 
 
-    private void fadeOut(StackPane rectangle, Animated animated){
+    private void fadeOut(StackPane rectangle,int ind, Animated animated){
         FadeTransition ft = new FadeTransition(Duration.millis(500), rectangle);
         ft.setFromValue(1.0);
         ft.setToValue(0);
         ft.setCycleCount(1);
         ft.setAutoReverse(true);
+        final Animated finalAnimated = animated;
+        final int Ind = ind;
         ft.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 //System.out.println("Fade Out ended");
-                animateFallDownBlocks(animated);
+                if (Ind==1) {
+                    animateFallDownBlocks(animated);
+                }
             }
         });
         ft.play();
+    }
+
+    private void animateFadeOutBlocks(Animated animated){
+        int ind = animated.getToDestroy().size();
+        for (Block destroy: animated.getToDestroy()){
+            fadeOut(getRectangleFromBlock(destroy),ind,animated);
+            ind--;
+        }
+
     }
 
     private void fadeIn(StackPane rectangle, Animated animated){
@@ -343,6 +354,7 @@ public class View {
             rowOfColumnsPane = (GridPane)this.mainGridPane.getChildren().get(0);
         }
         catch (IndexOutOfBoundsException iobe){
+
             System.out.println(this.mainGridPane.getChildren());
         }
 

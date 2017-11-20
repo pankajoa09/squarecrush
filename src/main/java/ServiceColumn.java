@@ -78,11 +78,6 @@ public class ServiceColumn {
     */
 
 
-
-
-
-
-
     public ArrayList<Block> getBlocksOnTopOfBlock(Block block, ColumnOfBlocks columnOfBlocks) {
         //System.out.println("");
         //System.out.println("GET BLOCKS ON TOP:");

@@ -29,52 +29,10 @@ public class Testing {
 
 
 
-    public void testApplyGravityToColumnOfBlocks(){
-        ColumnOfBlocks testCol = createColumn();
-        Block toRemove1 = testCol.getBlock(0);
-        Block toRemove2 = testCol.getBlock(1);
-        Block toRemove3 = testCol.getBlock(2);
-        Block toRemove4 = testCol.getBlock(3);
-        Block toRemove5 = testCol.getBlock(4);
-        testCol.removeBlock(toRemove1);
-        testCol.removeBlock(toRemove5);
-        testCol.removeBlock(toRemove4);
-        testCol = serviceColumn.applyGravityToColumnOfBlocks(testCol);
-//        for (Block block: testCol.getContainingBlocks()){
-//            debug.printBlock(block);
-        //}
-        for (int i = 0; i<5;i++){
-            debug.printBlock(testCol.getBlock(i));
-        }
-
-    }
-
-    public void testApplyCrunch(){
-        ColumnOfBlocks testCol = createColumn();
 
 
-        Block toRemove1 = testCol.getBlock(0);
-        Block toRemove2 = testCol.getBlock(1);
-        Block toRemove3 = testCol.getBlock(2);
-        Block toRemove4 = testCol.getBlock(3);
-        Block toRemove5 = testCol.getBlock(4);
-        testCol.removeBlock(toRemove2);
-        testCol.removeBlock(toRemove4);
-        testCol = serviceColumn.applyCrunchToColumnOfBlocks(testCol);
-        for (Block block: testCol.getContainingBlocks()){
-            debug.printBlock(block);
-        }
 
 
-    }
-
-    public void testShiftDownBlocks(){
-        ColumnOfBlocks testCol = createColumn();
-        ArrayList<Block> tshft = serviceColumn.shiftDownBlocks(testCol.getContainingBlocks(),1);
-        for (Block blk: tshft){
-            debug.printBlock(blk);
-        }
-    }
 
     public void testAddingToColumn(){
         ColumnOfBlocks testCol = createColumn();
@@ -124,31 +82,7 @@ public class Testing {
 
     }
 
-    public void testReplaceBlocks(){
-        RowOfColumns testRow = boardFactory.createRowOfColumns();
-        ArrayList<Block> dest = service.getBlocksToDestroy(testRow);
-        debug.printArrayInRowOfColumns(dest,testRow);
-        testRow = service.destroyBlocks(testRow,dest);
-        debug.printArrayInRowOfColumns(dest,testRow);
-        testRow = service.applyGravityToRowOfColumns(testRow);
-        debug.printRowOfColumns(testRow);
-        //System.out.println("----000000---");
-        for (ColumnOfBlocks columnOfBlocks: testRow.getContainingColumns()){
-            for (Block block: columnOfBlocks.getContainingBlocks()){
-          //      debug.printBlock(block);
-            }
-            //System.out.println("-----");
 
-        }
-        System.out.println("replacement");
-        ArrayList<Block> repl = service.createReplacementBlocks(testRow);
-        for (Block block : repl){
-            debug.printBlock(block);
-        }
-        testRow = service.addReplacementBlocksToRowOfColumns(repl,testRow);
-        debug.printRowOfColumns(testRow);
-
-    }
 
     public void testGetBlock(){
         ColumnOfBlocks testCol = createColumn();
@@ -166,14 +100,7 @@ public class Testing {
         }
     }
 
-    public void testGetToFall(){
-        RowOfColumns testCol = boardFactory.createRowOfColumns();
-        ArrayList<Block> toDest = service.getBlocksToDestroy(testCol);
-        testCol = service.destroyBlocks(testCol,toDest);
-        testCol = service.applyGravityToRowOfColumns(testCol);
 
-
-    }
 
     public void testClone(){
         RowOfColumns orig = boardFactory.createRowOfColumns();

@@ -46,6 +46,9 @@ public class Service{
 
 
 
+
+
+
     public Animated swap(Animated animated){
 
         RowOfColumns rowOfColumns = animated.getRowOfColumns();
@@ -83,18 +86,6 @@ public class Service{
 
 
 
-    public RowOfColumns applyGravityToRowOfColumns(RowOfColumns rowOfColumns){
-
-        ArrayList<ColumnOfBlocks> internals = new ArrayList<>();
-        for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
-            ColumnOfBlocks currColumn = rowOfColumns.getColumnOfBlocks(i);
-            currColumn = serviceColumn.applyGravityToColumnOfBlocks(currColumn);
-            internals.add(currColumn);
-        }
-        rowOfColumns.setContainingColumns(internals);
-
-        return rowOfColumns;
-    }
 
     public RowOfColumns dropBlocksInToRowOfColumns(ArrayList<Block> faller, RowOfColumns rowOfColumns){
 
@@ -207,7 +198,7 @@ public class Service{
     public ArrayList<Block> getBlocksToDestroyHorizontal(RowOfColumns rowOfColumns){
         ArrayList<Block> ans = new ArrayList<Block>();
         int height = rowOfColumns.getColumnOfBlocks(0).getContainingBlocks().size();
-        System.out.println(height);
+
         for (int row = 0; row< height;row++){
             ArrayList<Block> reallyARow = new ArrayList<Block>();
             for (int col=0; col< rowOfColumns.getContainingColumns().size();col++){
@@ -232,7 +223,7 @@ public class Service{
 
             //the one next is the same
             if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))){
-                System.out.print("");
+
                 if (blockList.size() >= theNumber){
                     ans.addAll(blockList);
                 }
