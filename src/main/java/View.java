@@ -71,8 +71,9 @@ public class View {
         //primaryStage.setWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMaxWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMinWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
-
-        GridPane rowOfColumnsPane = refreshRowOfColumnsPane(rowOfColumns);
+        Animated animated = new Animated();
+        animated.setRowOfColumns(rowOfColumns);
+        GridPane rowOfColumnsPane = refreshRowOfColumnsPane(rowOfColumns,animated);
 
         mainGridPane.add(rowOfColumnsPane,2,2);
         stackPane.getChildren().clear();
@@ -97,9 +98,10 @@ public class View {
         mainGridPane.getChildren().removeAll();
         //System.out.println("THIS IS WHAT REFRESHMAINGRIDANIMATOR GETS:");
         //debug.printRowOfColumns(animated.getRowOfColumns());
-        mainGridPane.add(refreshRowOfColumnsPane(animated),2,2);
+        RowOfColumns rowOfColumns = animated.getRowOfColumns();
+        mainGridPane.add(refreshRowOfColumnsPane(rowOfColumns,animated),2,2);
         Event event = new Event();
-        animated = event.generalHandler(animated.getRowOfColumns());
+        animated = event.generalHandler(animated);
         animateFadeOutBlocks(animated);
 
         //mainGridPane.setTranslateY(-200);
@@ -140,11 +142,17 @@ public class View {
         final Rectangle blockRectangle = new Rectangle();
         blockRectangle.setHeight(BLOCK_RECTANGLE_SIZE);
         blockRectangle.setWidth(BLOCK_RECTANGLE_SIZE);
-        if ()
-        else {
+        if (animated.getToPlaceOnTop().contains(block)){
+            blockRectangle.setFill(new Color(1,1,1,1));
+            blockRectangle.setStroke(Color.WHITE);
+
+        }
+        else{
             blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
         }
+
         //blockRectangle.setFill(new Color(1,1,1,1));
+
         StackPane rectanglePane = new StackPane();
         //Label text = new Label((block.getPositionInColumn())+" "+block.getColumnNumber());
         Label text = new Label("");
@@ -237,7 +245,7 @@ public class View {
     private void animateFadeInBlocks(Animated animated){
 
         for (Block create: animated.getToPlaceOnTop()){
-            StackPane rectangle = refreshBlockRectangle(create,animated.getRowOfColumns());
+            StackPane rectangle = refreshBlockRectangle(create,animated);
             fadeIn(rectangle,animated);
             //fadeIn(getRectangleFromBlock(create),animated);
         }
@@ -268,8 +276,8 @@ public class View {
 
                     //System.out.println("Fall Down ended");
 
-                    //animateFadeInBlocks(finalAnimated);
-                    refreshMainGrid(finalAnimated);
+                    animateFadeInBlocks(finalAnimated);
+                    //refreshMainGrid(finalAnimated);
 
                     //stackPane.getChildren().clear();
                     //stackPane.getChildren().removeAll();
@@ -286,6 +294,10 @@ public class View {
 
     private void animateFallDownBlocks(Animated animated){
         int ind = animated.getToFall().size();
+        if (animated.getToFall().size()==1){
+            System.out.println("my nibbb");
+            debug.printBlock(animated.getToFall().get(0));
+        }
         if (!animated.getToFall().isEmpty()) {
             for (Block fall : animated.getToFall()) {
                 fallDown(getRectangleFromBlock(fall), fall.getShiftDown(), ind, animated);
@@ -301,14 +313,14 @@ public class View {
         ft.setFromValue(1.0);
         ft.setToValue(0);
         ft.setCycleCount(1);
-        ft.setAutoReverse(true);
+        ft.setAutoReverse(false);
         final Animated finalAnimated = animated;
         final int Ind = ind;
         ft.onFinishedProperty().set(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 //System.out.println("Fade Out ended");
                 if (Ind==1) {
-                    animateFallDownBlocks(animated);
+                    animateFallDownBlocks(finalAnimated);
                 }
             }
         });

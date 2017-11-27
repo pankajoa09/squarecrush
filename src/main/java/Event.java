@@ -63,7 +63,7 @@ public class Event {
 
     public Animated generalHandler(Animated oldAnimated){
         Animated animated = new Animated();
-        animated.setRowOfColumns(rowOfColumns);
+        animated.setRowOfColumns(oldAnimated.getRowOfColumns());
         return service.update(animated);
     }
 
