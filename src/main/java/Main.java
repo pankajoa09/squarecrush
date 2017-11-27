@@ -7,33 +7,12 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 
-
     public static void main(String[] args) {
         Application.launch(Main.class, args);
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
         Controller controller = new Controller(primaryStage);
-        //Testing testing = new Testing();
-        //testing.testApplyGravityToColumnOfBlocks();
-        //testing.testAddingToColumn();
-        //testing.testThreesARow();
-        //testing.testThrees();
-        //testing.testGetBlocksToDestroy();
-        //testing.testDestroyBlocks();
-        //testing.testReplaceBlocks();
-        //testing.testApplyCrunch();
-        //testing.testGetBlock();
-        //testing.testClone();
-        //testing.testGetToFallNew();
-        //testing.testFall();
-
-
-
     }
-
-
-
 }

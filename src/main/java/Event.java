@@ -1,8 +1,3 @@
-import com.sun.rowset.internal.Row;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 /**
@@ -11,7 +6,6 @@ import java.util.ArrayList;
 public class Event {
 
     Debug debug = new Debug();
-    Engine engine = new Engine();
     Service service = new Service();
     private final static Clicks clicks = new Clicks();
 
@@ -66,12 +60,4 @@ public class Event {
         animated.setRowOfColumns(oldAnimated.getRowOfColumns());
         return service.update(animated);
     }
-
-
-
-
-
-
-
-
 }

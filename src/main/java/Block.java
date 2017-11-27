@@ -2,15 +2,6 @@
  * Created by pjoa09 on 9/26/17.
  */
 
-import javafx.scene.image.Image;
-import javafx.scene.paint.ImagePattern;
-
-import javax.imageio.ImageIO;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-
 public class Block {
 
 
@@ -18,9 +9,6 @@ public class Block {
     private int columnNumber; // i
     private BlockImage blockImage;
     private int shiftDown;
-
-
-
 
     public int getShiftDown(){
         return shiftDown;
@@ -30,28 +18,13 @@ public class Block {
         this.shiftDown = this.shiftDown+howMuch;
     }
 
-    public void setShiftDown(int howMuch){
-        this.shiftDown= howMuch;
-    }
-
-    public boolean didBlockShiftDown(){
-        return this.shiftDown != 0;
-    }
 
     public int getPositionInColumn() {
         return positionInColumn;
     }
 
-    public void setPositionInColumn(int positionInColumn) {
-        this.positionInColumn = positionInColumn;
-    }
-
     public int getColumnNumber() {
         return columnNumber;
-    }
-
-    public void setColumnNumber(int columnNumber) {
-        this.columnNumber = columnNumber;
     }
 
     public BlockImage getBlockImage() {
@@ -76,23 +49,4 @@ public class Block {
         blockImage.createRandom(blockImagePoolSize);
         this.blockImage = blockImage;
     }
-
-    public void createNullBlock(int positionInColumn,int columnNumber){
-        this.columnNumber = columnNumber;
-        this.positionInColumn = positionInColumn;
-        BlockImage nullBlockImage = new BlockImage();
-        nullBlockImage.createNull();
-        this.blockImage = nullBlockImage;
-    }
-
-
-
-
-
-
-
-
-
-
-
 }

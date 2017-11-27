@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -12,10 +11,6 @@ public class ServiceColumn {
 
     private static final int MAX_HEIGHT = 5;
     private static final int POOL_SIZE = 3;
-
-
-
-
 
     public ArrayList<Block> getFallingBlocks(ColumnOfBlocks columnOfBlocks){
         ColumnOfBlocks currColumn = columnOfBlocks;
@@ -71,12 +66,6 @@ public class ServiceColumn {
         return ans;
     }
 
-    /*
-    public ColumnOfBlocks getColumnAfterBlocksFall(ArrayList<Block> fallers, ColumnOfBlocks columnOfBlocks){
-
-    }
-    */
-
 
     public ArrayList<Block> getBlocksOnTopOfBlock(Block block, ColumnOfBlocks columnOfBlocks) {
         //System.out.println("");
@@ -108,32 +97,15 @@ public class ServiceColumn {
 
     public ArrayList<Block> shiftDownBlocksOnOwn(ArrayList<Block> blocks) {
         ArrayList<Block> shiftedDown = new ArrayList<Block>();
-        //System.out.println("");
-        //System.out.println("GET SHIFTED BLOCKS:");
         if (!blocks.isEmpty()) {
             for (Block block : blocks) {
                 BlockImage blockImage = block.getBlockImage();
                 Block shifted = new Block();
                 shifted.createBlock(block.getPositionInColumn() + block.getShiftDown(), block.getColumnNumber(), blockImage);
-                //debug.printBlock(shifted);
                 shiftedDown.add(shifted);
             }
         }
         return shiftedDown;
-    }
-
-    public ArrayList<Block> getBlocksBottomOfBlock(Block block, ColumnOfBlocks columnOfBlocks) {
-        //System.out.println("");
-        //System.out.println("GET BOTTOM BLOCKS");
-        ArrayList<Block> blocksBottomOfBlock = new ArrayList<Block>();
-        for (Block blk : columnOfBlocks.getContainingBlocks()) {
-            if (blk.getPositionInColumn() > block.getPositionInColumn()) {
-                //debug.printBlock(blk);
-                blocksBottomOfBlock.add(blk);
-
-            }
-        }
-        return blocksBottomOfBlock;
     }
 
     public ArrayList<Block> createReplacementBlocks(ColumnOfBlocks columnOfBlocks){
@@ -151,7 +123,4 @@ public class ServiceColumn {
         }
         return replacement;
     }
-
-
-
 }

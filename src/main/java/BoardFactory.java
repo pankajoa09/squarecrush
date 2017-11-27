@@ -5,7 +5,7 @@
  */
 public class BoardFactory implements Cloneable {
 
-    private final static int MAX_OBJECTS = 3;
+//    private final static int MAX_OBJECTS = 3;
     private final static int WIDTH = 5;
     private final static int HEIGHT = 5;
     private final static int BLOCK_IMAGE_POOL_SIZE = 3;

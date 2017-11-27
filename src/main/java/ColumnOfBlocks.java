@@ -30,9 +30,9 @@ public class ColumnOfBlocks {
         return this.containingBlocks;
     }
 
-    public void setContainingBlocks(ArrayList<Block> containingBlocks) {
-        this.containingBlocks = containingBlocks;
-    }
+//    public void setContainingBlocks(ArrayList<Block> containingBlocks) {
+//        this.containingBlocks = containingBlocks;
+//    }
 
     public void addBlock(Block block){
         if ((!this.containingBlocks.contains(block)) && (block.getColumnNumber()==this.getPositionInRowOfColumns())) {
@@ -46,8 +46,6 @@ public class ColumnOfBlocks {
             System.out.print("block doesn't belong to the column number: "+this.getPositionInRowOfColumns()+" ");
             debug.printBlock(block);
         }
-
-
     }
 
 
@@ -69,21 +67,13 @@ public class ColumnOfBlocks {
         }
     }
 
-
-
-
     public Block getBlock(int positionInColumn) {
         Block ans = new Block();
-        //System.out.println("----getblock---");
         for (Block poss : this.getContainingBlocks()) {
-            //debug.printBlock(poss);
             if (poss.getPositionInColumn() == positionInColumn) {
                     ans = poss;
             }
         }
-        //System.out.println("----getblockEND---");
-        //System.out.print("ANS:");
-        //debug.printBlock(ans);
         return ans;
     }
 

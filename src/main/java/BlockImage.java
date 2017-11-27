@@ -2,49 +2,23 @@
  * Created by pjoa09 on 9/26/17.
  */
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.ImagePattern;
-
-import javax.imageio.ImageIO;
+import org.apache.commons.io.FilenameUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import org.apache.commons.io.FilenameUtils;
-
 
 public class BlockImage {
-    private final String imageLocation = "BlockImages";
-
     private String name;
     private Image image;
-    private Color color;
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public Image getImage() {
         return image;
-    }
-
-    public void setImage(Image image) {
-        this.image = image;
-    }
-
-
-
-
-
-    public void createNull(){
-        Image image = new Image(getClass().getResource("nullBlock/null.png").toExternalForm());
-        create("NULLBLOCK",image);
     }
 
     public void create(String name,Image image){
@@ -85,13 +59,4 @@ public class BlockImage {
         }
         return listOfBlockImages;
     }
-
-
-
-
-
-
-
-
-
 }

@@ -1,6 +1,3 @@
-import com.sun.rowset.internal.Row;
-import javafx.scene.layout.BorderPane;
-
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -17,10 +14,6 @@ public class RowOfColumns {
 
     public void addColumnOfBlocks(ColumnOfBlocks columnOfBlocks){
         this.containingColumns.add(columnOfBlocks);
-    }
-
-    public void removeColumnOfBlocks(ColumnOfBlocks columnOfBlocks){
-        this.containingColumns.remove(columnOfBlocks);
     }
 
 
@@ -63,12 +56,6 @@ public class RowOfColumns {
             Block block = getColumnOfBlocks(columnNumber).getBlock(positionInColumn);
             ans = block;
         }
-        //else{
-            //System.out.println("block doesn't exist there, creating a NULLBLOCK");
-            //Block block = new Block();
-            //block.createNullBlock(-100,-100);
-            //ans = block;
-        //}
         return ans;
     }
 
@@ -102,26 +89,26 @@ public class RowOfColumns {
     }
 
 
-
-    public Block getNorthBlock(Block block) {
-        //System.out.println("north block");
-        return getBlock(block.getColumnNumber(),block.getPositionInColumn()-1);
-    }
-
-    public Block getEastBlock(Block block) {
-        //System.out.println("east block");
-        return getBlock(block.getColumnNumber()-1,block.getPositionInColumn());
-    }
-
-    public Block getSouthBlock(Block block) {
-        //System.out.println("south block");
-        return getBlock(block.getColumnNumber(),block.getPositionInColumn()+1);
-    }
-
-    public Block getWestBlock(Block block) {
-        //System.out.println("west block");
-        return getBlock(block.getColumnNumber()+1,block.getPositionInColumn());
-    }
+//
+//    public Block getNorthBlock(Block block) {
+//        //System.out.println("north block");
+//        return getBlock(block.getColumnNumber(),block.getPositionInColumn()-1);
+//    }
+//
+//    public Block getEastBlock(Block block) {
+//        //System.out.println("east block");
+//        return getBlock(block.getColumnNumber()-1,block.getPositionInColumn());
+//    }
+//
+//    public Block getSouthBlock(Block block) {
+//        //System.out.println("south block");
+//        return getBlock(block.getColumnNumber(),block.getPositionInColumn()+1);
+//    }
+//
+//    public Block getWestBlock(Block block) {
+//        //System.out.println("west block");
+//        return getBlock(block.getColumnNumber()+1,block.getPositionInColumn());
+//    }
 
 
 }

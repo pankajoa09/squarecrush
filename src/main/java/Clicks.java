@@ -1,5 +1,3 @@
-import java.util.ArrayList;
-
 /**
  * Created by pjoa09 on 10/24/17.
  */
@@ -8,10 +6,6 @@ public class Clicks {
     private Block firstClick;
 
     private Block secondClick;
-
-
-
-
 
     public boolean areClicksNextToEachOther() {
         if (howAreClicksArranged().equals("horizontal")){

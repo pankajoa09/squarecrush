@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
 import java.lang.Math;
 
 
@@ -22,11 +10,7 @@ import java.util.Set;
  */
 public class Service{
 
-
-    Debug debug = new Debug();
     ServiceColumn serviceColumn = new ServiceColumn();
-
-
 
     public Animated update(Animated animated){
         RowOfColumns rowOfColumns = animated.getRowOfColumns();
@@ -38,16 +22,9 @@ public class Service{
         rowOfColumns = addReplacementBlocksToRowOfColumns(replacementBlocks,rowOfColumns);
         animated.setToDestroy(toDestroy);
         animated.setRowOfColumns(rowOfColumns);
-        animated.setToPlaceOnTop(replacementBlocks);
         animated.setToFall(blocksThatWillFall);
         return animated;
     }
-
-
-
-
-
-
 
     public Animated swap(Animated animated){
 
@@ -154,25 +131,6 @@ public class Service{
         hypoRowOfColumns = applySwap(firstClick,secondClick, hypoRowOfColumns);
         System.out.println("is destroy empty? "+getBlocksToDestroy(hypoRowOfColumns).isEmpty());
         return (!getBlocksToDestroy(hypoRowOfColumns).isEmpty());
-
-//        return didItChange(hypoRowOfColumns, rowOfColumns);
-    }
-
-    public boolean didItChange(RowOfColumns hypoRowOfColumns, RowOfColumns rowOfColumns){
-        Boolean didItChange = false;
-        for (int pos=0;pos<rowOfColumns.getColumnOfBlocks(1).getContainingBlocks().size();pos++) {
-            for (int col = 0; col < rowOfColumns.getContainingColumns().size(); col++) {
-                String hypo = hypoRowOfColumns.getBlock(col,pos).getBlockImage().getName();
-                String real = rowOfColumns.getBlock(col,pos).getBlockImage().getName();
-                //System.out.println(hypo);
-                //System.out.println(real);
-                if (!(hypo.equals(real))){
-                    didItChange=true;
-                }
-            }
-        }
-        System.out.println("diditchange "+didItChange);
-        return didItChange;
     }
 
 
@@ -212,24 +170,23 @@ public class Service{
 
 
 
-    public ArrayList<Block> threeOrMore(ArrayList<Block> vectorOfBlocks){
+    public ArrayList<Block> threeOrMore(ArrayList<Block> vectorOfBlocks) {
         int theNumber = 3;
         ArrayList<Block> ans = new ArrayList<Block>();
         //dont want duplication
         Set<Block> blockList = new HashSet<Block>();
-        for (int i=0; i< vectorOfBlocks.size()-1;i++) {
+        for (int i = 0; i < vectorOfBlocks.size() - 1; i++) {
             Block currBlock = vectorOfBlocks.get(i);
-            Block nextBlock = vectorOfBlocks.get(i+1);
+            Block nextBlock = vectorOfBlocks.get(i + 1);
 
             //the one next is the same
-            if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))){
+            if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))) {
 
-                if (blockList.size() >= theNumber){
+                if (blockList.size() >= theNumber) {
                     ans.addAll(blockList);
                 }
                 blockList.clear();
-            }
-            else if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
+            } else if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())) {
                 blockList.add(currBlock);
                 blockList.add(nextBlock);
             }
@@ -237,18 +194,12 @@ public class Service{
 
         }
 
-        if (blockList.size() >= theNumber){
+        if (blockList.size() >= theNumber) {
             ans.addAll(blockList);
         }
 
         return ans;
     }
-
-
-
-
-
-
 
     public ArrayList<Block> createReplacementBlocks(RowOfColumns rowOfColumns){
         ArrayList<Block> replacement = new ArrayList<Block>();
@@ -258,14 +209,4 @@ public class Service{
         }
         return replacement;
     }
-
-
-
-
-
-
-
-
-
-
 }
