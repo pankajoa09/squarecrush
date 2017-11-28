@@ -30,7 +30,6 @@ public class Event {
             clicklist.add(clicks.getFirstClick());
             clicklist.add(clicks.getSecondClick());
             debug.printArrayInRowOfColumns(clicklist,rowOfColumns);
-
             Animated animated = new Animated();
             animated.setScore(oldAnimated.getScore());
             Block firstClick = clicks.getFirstClick();

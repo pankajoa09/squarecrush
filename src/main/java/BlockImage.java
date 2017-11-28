@@ -40,8 +40,6 @@ public class BlockImage {
 
 
 
-
-
     public void createNull(){
         Image image = new Image(getClass().getResource("nullBlock/null.png").toExternalForm());
         create("NULLBLOCK",image);

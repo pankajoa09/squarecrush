@@ -30,8 +30,6 @@ public class Testing {
 
 
 
-
-
     public void testThrees(){
         for (int i = 0; i<20;i++) {
             ColumnOfBlocks testCol = createColumn();
@@ -152,19 +150,7 @@ public class Testing {
 
     }
 
-    public void testWhatTheFuck(){
-        RowOfColumns rowOfColumns = boardFactory.createRowOfColumns(5,3);
 
-        ArrayList<Block> toDestroy = service.getBlocksToDestroy(rowOfColumns);
-        debug.printArrayInRowOfColumns(toDestroy,rowOfColumns);
-        rowOfColumns = service.destroyBlocks(rowOfColumns,toDestroy);
-        ArrayList<Block> blocksThatWillFall = service.getFallingBlocks(rowOfColumns);
-        debug.printArrayInRowOfColumns(blocksThatWillFall,rowOfColumns);
-        rowOfColumns = service.dropBlocksInToRowOfColumns(blocksThatWillFall,rowOfColumns);
-        debug.printRowOfColumns(rowOfColumns);
-        ArrayList<Block> replacementBlocks = service.createReplacementBlocks(rowOfColumns);
-        rowOfColumns = service.addReplacementBlocksToRowOfColumns(replacementBlocks,rowOfColumns);
-    }
 
     public void testGameOver(){
         RowOfColumns rowOfColumns = boardFactory.createCleanRowOfColumns(3,10);

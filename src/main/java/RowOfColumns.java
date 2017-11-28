@@ -127,25 +127,6 @@ public class RowOfColumns {
 
 
 
-    public Block getNorthBlock(Block block) {
-        //System.out.println("north block");
-        return getBlock(block.getColumnNumber(),block.getPositionInColumn()-1);
-    }
-
-    public Block getEastBlock(Block block) {
-        //System.out.println("east block");
-        return getBlock(block.getColumnNumber()-1,block.getPositionInColumn());
-    }
-
-    public Block getSouthBlock(Block block) {
-        //System.out.println("south block");
-        return getBlock(block.getColumnNumber(),block.getPositionInColumn()+1);
-    }
-
-    public Block getWestBlock(Block block) {
-        //System.out.println("west block");
-        return getBlock(block.getColumnNumber()+1,block.getPositionInColumn());
-    }
 
 
 }

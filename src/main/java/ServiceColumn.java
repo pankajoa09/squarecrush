@@ -124,19 +124,7 @@ public class ServiceColumn {
         return shiftedDown;
     }
 
-    public ArrayList<Block> getBlocksBottomOfBlock(Block block, ColumnOfBlocks columnOfBlocks) {
-        //System.out.println("");
-        //System.out.println("GET BOTTOM BLOCKS");
-        ArrayList<Block> blocksBottomOfBlock = new ArrayList<Block>();
-        for (Block blk : columnOfBlocks.getContainingBlocks()) {
-            if (blk.getPositionInColumn() > block.getPositionInColumn()) {
-                //debug.printBlock(blk);
-                blocksBottomOfBlock.add(blk);
 
-            }
-        }
-        return blocksBottomOfBlock;
-    }
 
     public ArrayList<Block> createReplacementBlocks(ColumnOfBlocks columnOfBlocks,int maxHeight, int poolSize){
         ArrayList<Block> replacement = new ArrayList<Block>();
