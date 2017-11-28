@@ -14,12 +14,11 @@ import java.util.Queue;
 public class Engine {
 
     Debug debug = new Debug();
-    private final static int MAX_OBJECTS = 3;
-    private final static int WIDTH = 5;
-    private final static int TRUE_HEIGHT = 10;
-    private final static int HEIGHT = 5;
-    private final static int BLOCK_RECTANGLE_SIZE = 80;
-    private final static int BLOCK_IMAGE_POOL_SIZE = 8;
+
+
+
+
+
 
     private ArrayList<Block> getBlocksToRemove(Block block, RowOfColumns rowOfColumns, ArrayList<Block> clusterOfBlocks){
         // because we cannot let it look backwards we need to tell it where it has been, which is in the parameter as visited.

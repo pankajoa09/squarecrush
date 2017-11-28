@@ -14,21 +14,22 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-
-        Controller controller = new Controller(primaryStage);
+        int board = 5;
+        int size = 3;
+        Controller controller = new Controller(primaryStage,board,size);
         //Testing testing = new Testing();
-        //testing.testApplyGravityToColumnOfBlocks();
-        //testing.testAddingToColumn();
-        //testing.testThreesARow();
+
+
+
         //testing.testThrees();
         //testing.testGetBlocksToDestroy();
         //testing.testDestroyBlocks();
-        //testing.testReplaceBlocks();
-        //testing.testApplyCrunch();
         //testing.testGetBlock();
         //testing.testClone();
         //testing.testGetToFallNew();
         //testing.testFall();
+        //testing.testWhatTheFuck();
+        //testing.testGameOver();
 
 
 

@@ -10,6 +10,26 @@ public class Animated{
     private ArrayList<Block> toPlaceOnTop = new ArrayList<Block>();
     private RowOfColumns rowOfColumns = new RowOfColumns();
 
+    public boolean isGameOver() {
+        return gameOver;
+    }
+
+    public void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    private boolean gameOver=false;
+
+    public int getScore() {
+        return score;
+    }
+
+    public void setScore(int score) {
+        this.score = score;
+    }
+
+    private int score = 0;
+
 
 
     private Clicks clicks = new Clicks();

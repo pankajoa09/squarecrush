@@ -5,39 +5,41 @@
  */
 public class BoardFactory implements Cloneable {
 
-    private final static int MAX_OBJECTS = 3;
-    private final static int WIDTH = 5;
-    private final static int HEIGHT = 5;
-    private final static int BLOCK_IMAGE_POOL_SIZE = 3;
 
 
 
-    public RowOfColumns createRowOfColumns(){
+
+
+    Debug debug = new Debug();
+
+    public RowOfColumns createRowOfColumns(int boardSize,int poolSize){
 
         RowOfColumns rowOfColumns = new RowOfColumns();
+        rowOfColumns.setPoolSize(poolSize);
         //populate rowofcolumns with columns
-        for (int i=0; i<WIDTH;i++){
+        for (int i=0; i<boardSize;i++){
             ColumnOfBlocks columnOfBlocks = new ColumnOfBlocks();
             columnOfBlocks.setPositionInRowOfColumns(i);
             rowOfColumns.addColumnOfBlocks(columnOfBlocks);
         }
 
         for (ColumnOfBlocks col : rowOfColumns.getContainingColumns()){
-            for (int i =0; i<HEIGHT;i++){
+            for (int i =0; i<boardSize;i++){
                 Block block = new Block();
-                block.createRandomBlock(i,col.getPositionInRowOfColumns(),BLOCK_IMAGE_POOL_SIZE);
+                block.createRandomBlock(i,col.getPositionInRowOfColumns(),poolSize);
+                //debug.printBlock(block);
                 col.addBlock(block);
             }
         }
 
-        //debug.printArrayInRowOfColumns(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(),rowOfColumns);
+
         return rowOfColumns;
     }
 
-    public RowOfColumns createCleanRowOfColumns(){
+    public RowOfColumns createCleanRowOfColumns(int boardSize,int poolSize){
         System.out.println("creating clean rowOfColumns");
         Service service = new Service();
-        RowOfColumns rowOfColumns = createRowOfColumns();
+        RowOfColumns rowOfColumns = createRowOfColumns(boardSize,poolSize);
         while (true) {
             if (service.getBlocksToDestroy(rowOfColumns).isEmpty()) {
                 System.out.println("done");
@@ -49,10 +51,12 @@ public class BoardFactory implements Cloneable {
         }
     }
 
+
+
     public RowOfColumns createRowOfColumnsClone(RowOfColumns rowOfColumns){
 
         RowOfColumns rowOfColumnsClone = new RowOfColumns();
-
+        rowOfColumnsClone.setPoolSize(rowOfColumns.getPoolSize());
         for (ColumnOfBlocks column : rowOfColumns.getContainingColumns()){
             ColumnOfBlocks cloneColumn = new ColumnOfBlocks();
             cloneColumn.setPositionInRowOfColumns(column.getPositionInRowOfColumns());

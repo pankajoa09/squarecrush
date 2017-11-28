@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class Event {
 
     Debug debug = new Debug();
-    Engine engine = new Engine();
+
     Service service = new Service();
     private final static Clicks clicks = new Clicks();
 
@@ -32,6 +32,7 @@ public class Event {
             debug.printArrayInRowOfColumns(clicklist,rowOfColumns);
 
             Animated animated = new Animated();
+            animated.setScore(oldAnimated.getScore());
             Block firstClick = clicks.getFirstClick();
             Block secondClick = clicks.getSecondClick();
             Clicks click = new Clicks();
@@ -63,8 +64,15 @@ public class Event {
 
     public Animated generalHandler(Animated oldAnimated){
         Animated animated = new Animated();
+        animated.setScore(oldAnimated.getScore());
         animated.setRowOfColumns(oldAnimated.getRowOfColumns());
         return service.update(animated);
+    }
+
+    public void newGame(Stage primaryStage, int boardSize, int poolSize){
+        Controller controller = new Controller(primaryStage,boardSize,poolSize);
+        controller.newGame(boardSize,poolSize);
+
     }
 
 

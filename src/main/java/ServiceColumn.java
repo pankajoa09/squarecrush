@@ -10,8 +10,8 @@ public class ServiceColumn {
 
     Debug debug = new Debug();
 
-    private static final int MAX_HEIGHT = 5;
-    private static final int POOL_SIZE = 3;
+
+
 
 
 
@@ -24,16 +24,18 @@ public class ServiceColumn {
         int si = 1;
         Set<Block> blocksThatWillFall = new HashSet<>();
         if (!currColumn.getContainingBlocks().isEmpty()) {
-            Block lastBlock = currColumn.getContainingBlocks().get(currColumn.getContainingBlocks().size() - 1);
+            Block lastBlock = currColumn.getContainingBlocks().get(currColumn.size() - 1);
 
-            int howFarItIsFromTheFloor = 4 - lastBlock.getPositionInColumn();
 
-            if (currColumn.getContainingBlocks().size() == 1){
+            //System.out.println(columnOfBlocks.getMaxHeight()-1);
+            int howFarItIsFromTheFloor =  (columnOfBlocks.getMaxHeight()-1) - lastBlock.getPositionInColumn();
+
+            if (currColumn.size() == 1){
                 Block last = currColumn.getContainingBlocks().get(0);
                 last.incrementShiftDown(howFarItIsFromTheFloor);
                 blocksThatWillFall.add(last);
             }
-            for (int fi = 0; fi < currColumn.getContainingBlocks().size() - 1; fi++) {
+            for (int fi = 0; fi < currColumn.size() - 1; fi++) {
 
                 Block curr = currColumn.getContainingBlocks().get(fi);
                 Block next = currColumn.getContainingBlocks().get(si);
@@ -136,16 +138,18 @@ public class ServiceColumn {
         return blocksBottomOfBlock;
     }
 
-    public ArrayList<Block> createReplacementBlocks(ColumnOfBlocks columnOfBlocks){
+    public ArrayList<Block> createReplacementBlocks(ColumnOfBlocks columnOfBlocks,int maxHeight, int poolSize){
         ArrayList<Block> replacement = new ArrayList<Block>();
-        for (int i =0; i< MAX_HEIGHT; i++){
+
+
+        for (int i =0; i< maxHeight; i++){
             try{
                 Block block = columnOfBlocks.getBlock(i);
                 boolean smth = block.getBlockImage().getImage()==null;
             }
             catch (NullPointerException npe){
                 Block block = new Block();
-                block.createRandomBlock(i,columnOfBlocks.getPositionInRowOfColumns(),POOL_SIZE);
+                block.createRandomBlock(i,columnOfBlocks.getPositionInRowOfColumns(),poolSize);
                 replacement.add(block);
             }
         }

@@ -1,18 +1,7 @@
 
-
-
-
-
-
-
-
-
-
-
+import com.sun.rowset.internal.Row;
 
 import java.lang.Math;
-
-
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,6 +18,7 @@ public class Service{
 
 
     public Animated update(Animated animated){
+
         RowOfColumns rowOfColumns = animated.getRowOfColumns();
         ArrayList<Block> toDestroy = getBlocksToDestroy(rowOfColumns);
         rowOfColumns = destroyBlocks(rowOfColumns,toDestroy);
@@ -36,10 +26,16 @@ public class Service{
         rowOfColumns = dropBlocksInToRowOfColumns(blocksThatWillFall,rowOfColumns);
         ArrayList<Block> replacementBlocks = createReplacementBlocks(rowOfColumns);
         rowOfColumns = addReplacementBlocksToRowOfColumns(replacementBlocks,rowOfColumns);
+        if (toDestroy.isEmpty()){
+            animated.setGameOver(isItGameOver(rowOfColumns));
+            //System.out.println("GAME OVER");
+        }
         animated.setToDestroy(toDestroy);
+        animated.setScore(animated.getScore()+toDestroy.size());
         animated.setRowOfColumns(rowOfColumns);
         animated.setToPlaceOnTop(replacementBlocks);
         animated.setToFall(blocksThatWillFall);
+
         return animated;
     }
 
@@ -90,7 +86,7 @@ public class Service{
     public RowOfColumns dropBlocksInToRowOfColumns(ArrayList<Block> faller, RowOfColumns rowOfColumns){
 
         ArrayList<ColumnOfBlocks> internals = new ArrayList<>();
-        for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
+        for (int i = 0; i < rowOfColumns.size();i++){
             ColumnOfBlocks currColumn = rowOfColumns.getColumnOfBlocks(i);
             currColumn = serviceColumn.dropBlocksInToColumn(faller,currColumn);
             internals.add(currColumn);
@@ -160,8 +156,8 @@ public class Service{
 
     public boolean didItChange(RowOfColumns hypoRowOfColumns, RowOfColumns rowOfColumns){
         Boolean didItChange = false;
-        for (int pos=0;pos<rowOfColumns.getColumnOfBlocks(1).getContainingBlocks().size();pos++) {
-            for (int col = 0; col < rowOfColumns.getContainingColumns().size(); col++) {
+        for (int pos=0;pos<rowOfColumns.getColumnOfBlocks(1).size();pos++) {
+            for (int col = 0; col < rowOfColumns.size(); col++) {
                 String hypo = hypoRowOfColumns.getBlock(col,pos).getBlockImage().getName();
                 String real = rowOfColumns.getBlock(col,pos).getBlockImage().getName();
                 //System.out.println(hypo);
@@ -187,7 +183,7 @@ public class Service{
 
     public ArrayList<Block> getBlocksToDestroyVertical(RowOfColumns rowOfColumns){
         ArrayList<Block> ans = new ArrayList<Block>();
-        for (int i = 0; i <= rowOfColumns.getContainingColumns().size(); i++){
+        for (int i = 0; i <= rowOfColumns.size(); i++){
             ColumnOfBlocks currColumn = rowOfColumns.getColumnOfBlocks(i);
             ArrayList<Block> threeOrMores = threeOrMore(currColumn.getContainingBlocks());
             ans.addAll(threeOrMores);
@@ -197,16 +193,17 @@ public class Service{
 
     public ArrayList<Block> getBlocksToDestroyHorizontal(RowOfColumns rowOfColumns){
         ArrayList<Block> ans = new ArrayList<Block>();
-        int height = rowOfColumns.getColumnOfBlocks(0).getContainingBlocks().size();
-
-        for (int row = 0; row< height;row++){
+        for (int row = 0; row< rowOfColumns.size();row++){
             ArrayList<Block> reallyARow = new ArrayList<Block>();
-            for (int col=0; col< rowOfColumns.getContainingColumns().size();col++){
+
+            for (int col=0; col< rowOfColumns.size();col++){
+                Block blk = rowOfColumns.getBlock(col,row);
                 reallyARow.add(rowOfColumns.getBlock(col,row));
             }
             ArrayList<Block> threeOrMores = threeOrMore(reallyARow);
             ans.addAll(threeOrMores);
         }
+
         return ans;
     }
 
@@ -217,24 +214,31 @@ public class Service{
         ArrayList<Block> ans = new ArrayList<Block>();
         //dont want duplication
         Set<Block> blockList = new HashSet<Block>();
+
         for (int i=0; i< vectorOfBlocks.size()-1;i++) {
             Block currBlock = vectorOfBlocks.get(i);
-            Block nextBlock = vectorOfBlocks.get(i+1);
-
+            Block nextBlock = vectorOfBlocks.get(i + 1);
             //the one next is the same
-            if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))){
-
-                if (blockList.size() >= theNumber){
-                    ans.addAll(blockList);
+            try {
+                if (!(currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName()))) {
+                    if (blockList.size() >= theNumber) {
+                        ans.addAll(blockList);
+                    }
+                    blockList.clear();
+                } else if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())) {
+                    blockList.add(currBlock);
+                    blockList.add(nextBlock);
                 }
-                blockList.clear();
             }
-            else if (currBlock.getBlockImage().getName().equals(nextBlock.getBlockImage().getName())){
-                blockList.add(currBlock);
-                blockList.add(nextBlock);
+            catch (NullPointerException npe){
+                System.out.println("spin his jaw");
+                for (Block block : vectorOfBlocks){
+                    System.out.println(block);
+                    debug.printBlock(block);
+                }
+                //debug.printBlock(currBlock);
+                //debug.printBlock(nextBlock);
             }
-
-
         }
 
         if (blockList.size() >= theNumber){
@@ -247,18 +251,56 @@ public class Service{
 
 
 
-
-
-
     public ArrayList<Block> createReplacementBlocks(RowOfColumns rowOfColumns){
         ArrayList<Block> replacement = new ArrayList<Block>();
+        int maxHeight = rowOfColumns.size();
+        System.out.println(maxHeight);
         for (ColumnOfBlocks column : rowOfColumns.getContainingColumns()){
-            ArrayList<Block> perColumn = serviceColumn.createReplacementBlocks(column);
+            ArrayList<Block> perColumn = serviceColumn.createReplacementBlocks(column,maxHeight,rowOfColumns.getPoolSize());
             replacement.addAll(perColumn);
         }
         return replacement;
     }
 
+    public boolean isItGameOver(RowOfColumns original){
+        boolean gameOver = true;
+        BoardFactory boardFactory = new BoardFactory();
+
+
+        int turns = original.size()*2;
+        for (int i = 0; i<original.size();i++){
+            for (int j=0; j<original.size();j++){
+                RowOfColumns rowOfColumns = boardFactory.createRowOfColumnsClone(original);
+                RowOfColumns rowOfColumns2 = boardFactory.createRowOfColumnsClone(original);
+                Block one = rowOfColumns.getBlock(i,j);
+                Block two = rowOfColumns.getBlock(i,j+1);
+                Block three = rowOfColumns.getBlock(i+1,j);
+
+                ArrayList<Block> fukujava = new ArrayList<>();
+                fukujava.add(one);
+                fukujava.add(two);
+                fukujava.add(three);
+
+                //System.out.println("2849309234890");
+                //debug.printArrayInRowOfColumns(fukujava,rowOfColumns);
+                //System.out.println("2849309234890");
+                rowOfColumns = applySwap(one,two,rowOfColumns);
+                rowOfColumns2 = applySwap(one,three,rowOfColumns2);
+                ArrayList<Block> dest = getBlocksToDestroy(rowOfColumns);
+                ArrayList<Block> dest2 = getBlocksToDestroy(rowOfColumns2);
+
+                if (!dest.isEmpty() || !dest2.isEmpty()){
+                    System.out.println("////");
+                    debug.printArrayInRowOfColumns(dest,rowOfColumns);
+                    debug.printArrayInRowOfColumns(dest2,rowOfColumns2);
+                    gameOver = false;
+                }
+
+            }
+        }
+
+        return gameOver;
+    }
 
 
 

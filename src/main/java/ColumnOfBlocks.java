@@ -24,10 +24,26 @@ public class ColumnOfBlocks {
         this.positionInRowOfColumns = positionInRowOfColumns;
     }
 
+    public int size(){
+        return containingBlocks.size();
+    }
+
     public ArrayList<Block> getContainingBlocks() {
         Collections.sort(this.containingBlocks, (Block s1, Block s2) ->
                 (s1.getPositionInColumn() - s2.getPositionInColumn()));
         return this.containingBlocks;
+    }
+
+    int maxHeight;
+
+    public int getMaxHeight(){
+        return this.maxHeight;
+    }
+
+    public void updateMaxHeight(int height){
+        if (height > this.maxHeight){
+            this.maxHeight = height;
+        }
     }
 
     public void setContainingBlocks(ArrayList<Block> containingBlocks) {
@@ -37,6 +53,7 @@ public class ColumnOfBlocks {
     public void addBlock(Block block){
         if ((!this.containingBlocks.contains(block)) && (block.getColumnNumber()==this.getPositionInRowOfColumns())) {
             this.containingBlocks.add(block);
+            updateMaxHeight(this.size());
         }
         else if (this.containingBlocks.contains(block)){
             System.out.print("block exists in column ");

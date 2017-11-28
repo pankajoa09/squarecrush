@@ -9,22 +9,24 @@ public class Controller {
 
     private final Stage primaryStage;
     //View view = new View(primaryStage);
-    Engine engine = new Engine();
+
     BoardFactory boardFactory = new BoardFactory();
     Debug debug= new Debug();
 
-    public Controller(Stage primaryStage) {
+    public Controller(Stage primaryStage,int board, int pool) {
+        primaryStage.close();
         System.out.println("controller initiated");
         this.primaryStage = primaryStage;
         View view = new View(primaryStage);
-        view.initializeStage(newGame());
+        view.initializeStage(newGame(board,pool));
 
     }
 
 
-    public RowOfColumns newGame(){
+    public RowOfColumns newGame(int board, int pool){
         System.out.println("new game called");
-        RowOfColumns rowOfColumns = boardFactory.createCleanRowOfColumns();
+
+        RowOfColumns rowOfColumns = boardFactory.createCleanRowOfColumns(board,pool);
         //debug.showBlockOnGrid(rowOfColumns.getColumnOfBlocks(1).getContainingBlocks(), rowOfColumns);
         return rowOfColumns;
     }

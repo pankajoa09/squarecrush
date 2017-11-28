@@ -32,24 +32,6 @@ public class Testing {
 
 
 
-
-
-    public void testAddingToColumn(){
-        ColumnOfBlocks testCol = createColumn();
-        Block tor = testCol.getBlock(4);
-        Block toa = new Block();
-        toa.createNullBlock(4,0);
-        testCol.removeBlock(tor);
-        testCol.addBlock(toa);
-        System.out.println("post:");
-        for (Block block : testCol.getContainingBlocks()){
-            debug.printBlock(block);
-        }
-
-    }
-
-
-
     public void testThrees(){
         for (int i = 0; i<20;i++) {
             ColumnOfBlocks testCol = createColumn();
@@ -66,15 +48,15 @@ public class Testing {
 
 
     public void testGetBlocksToDestroy(){
-        RowOfColumns testRow = boardFactory.createRowOfColumns();
+        RowOfColumns testRow = boardFactory.createRowOfColumns(3,3);
+        debug.printRowOfColumns(testRow);
         ArrayList<Block> dest = service.getBlocksToDestroyHorizontal(testRow);
-
         debug.printArrayInRowOfColumns(dest, testRow);
 
     }
 
     public void testDestroyBlocks(){
-        RowOfColumns testRow = boardFactory.createRowOfColumns();
+        RowOfColumns testRow = boardFactory.createRowOfColumns(5,3);
         ArrayList<Block> dest = service.getBlocksToDestroy(testRow);
         debug.printArrayInRowOfColumns(dest,testRow);
         testRow = service.destroyBlocks(testRow,dest);
@@ -103,7 +85,7 @@ public class Testing {
 
 
     public void testClone(){
-        RowOfColumns orig = boardFactory.createRowOfColumns();
+        RowOfColumns orig = boardFactory.createRowOfColumns(5,3);
         RowOfColumns fake = boardFactory.createRowOfColumnsClone(orig);
         ArrayList<Block> dest = service.getBlocksToDestroy(fake);
         fake = service.destroyBlocks(fake,dest);
@@ -126,11 +108,11 @@ public class Testing {
         Block block4 = testCol.getBlock(4);
 
 
-        testCol.removeBlock(block0);
-        testCol.removeBlock(block1);
+        //testCol.removeBlock(block0);
+        //testCol.removeBlock(block1);
         //testCol.removeBlock(block2);
         //testCol.removeBlock(block3);
-        testCol.removeBlock(block4);
+        //testCol.removeBlock(block4);
 
 
         ArrayList<Block> fallers = serviceColumn.getFallingBlocks(testCol);
@@ -147,7 +129,7 @@ public class Testing {
     }
 
     public void testFall(){
-        RowOfColumns rowOfColumns =  boardFactory.createRowOfColumns();
+        RowOfColumns rowOfColumns =  boardFactory.createRowOfColumns(5,3);
         ArrayList<Block> dest = service.getBlocksToDestroy(rowOfColumns);
         System.out.println("destroy:");
         debug.printArrayInRowOfColumns(dest,rowOfColumns);
@@ -169,6 +151,29 @@ public class Testing {
 
 
     }
+
+    public void testWhatTheFuck(){
+        RowOfColumns rowOfColumns = boardFactory.createRowOfColumns(5,3);
+
+        ArrayList<Block> toDestroy = service.getBlocksToDestroy(rowOfColumns);
+        debug.printArrayInRowOfColumns(toDestroy,rowOfColumns);
+        rowOfColumns = service.destroyBlocks(rowOfColumns,toDestroy);
+        ArrayList<Block> blocksThatWillFall = service.getFallingBlocks(rowOfColumns);
+        debug.printArrayInRowOfColumns(blocksThatWillFall,rowOfColumns);
+        rowOfColumns = service.dropBlocksInToRowOfColumns(blocksThatWillFall,rowOfColumns);
+        debug.printRowOfColumns(rowOfColumns);
+        ArrayList<Block> replacementBlocks = service.createReplacementBlocks(rowOfColumns);
+        rowOfColumns = service.addReplacementBlocksToRowOfColumns(replacementBlocks,rowOfColumns);
+    }
+
+    public void testGameOver(){
+        RowOfColumns rowOfColumns = boardFactory.createCleanRowOfColumns(3,10);
+        debug.printRowOfColumns(rowOfColumns);
+        System.out.println(service.isItGameOver(rowOfColumns));
+        debug.printRowOfColumns(rowOfColumns);
+    }
+
+
 
 
 

@@ -8,10 +8,10 @@ import java.util.ArrayList;
  */
 public class Debug {
 
-    private final static int MAX_OBJECTS = 3;
-    private final static int WIDTH = 5;
-    private final static int TRUE_HEIGHT = 10;
-    private final static int HEIGHT = 5;
+
+
+
+
 
     public void printRowOfColumns(RowOfColumns rowOfColumns){
         System.out.println("-----ROWOFCOLUMNS----");
@@ -28,13 +28,11 @@ public class Debug {
 
     public void printArrayInRowOfColumns(ArrayList<Block> targetBlocks,RowOfColumns rowOfColumns){
         System.out.println("+++++++++++++++");
-        for (int pos=0;pos<HEIGHT;pos++){
-            for (int col=0;col<rowOfColumns.getContainingColumns().size();col++){
+        for (int pos=0;pos<rowOfColumns.size();pos++){
+            for (int col=0;col<rowOfColumns.size();col++){
                 ColumnOfBlocks columnOfBlocks = rowOfColumns.getColumnOfBlocks(col);
                 Block block = columnOfBlocks.getBlock(pos);
 
-
-                //System.out.print(" "+pos+"."+col+" ");
 
                 try {
                     if (targetBlocks.contains(block)) {

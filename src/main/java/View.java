@@ -1,4 +1,5 @@
 import com.sun.imageio.plugins.gif.GIFImageReader;
+import com.sun.jmx.snmp.SnmpAckPdu;
 import com.sun.org.apache.regexp.internal.RE;
 
 
@@ -8,17 +9,24 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.Lighting;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import sun.java2d.pipe.hw.AccelDeviceEventNotifier;
 
 
 import java.util.ArrayList;
@@ -36,15 +44,9 @@ public class View {
     private final Stage primaryStage;
 
 
-
-
-
     private final StackPane stackPane = new StackPane();
     private final GridPane mainGridPane = new GridPane();
 
-    private final static int MAX_OBJECTS = 3;
-    private final static int WIDTH = 5;
-    private final static int HEIGHT = 5;
     private final static int BLOCK_RECTANGLE_SIZE = 80;
     private Timeline timeline;
 
@@ -59,33 +61,87 @@ public class View {
 
 
 
-
-
-
-
     public void initializeStage(RowOfColumns rowOfColumns){
-
+        primaryStage.close();
         //primaryStage.setHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMaxHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMinHeight(TRUE_HEIGHT*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMaxWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
         //primaryStage.setMinWidth(WIDTH*BLOCK_RECTANGLE_SIZE);
+
         Animated animated = new Animated();
         animated.setRowOfColumns(rowOfColumns);
         GridPane rowOfColumnsPane = refreshRowOfColumnsPane(rowOfColumns,animated);
 
+
+        mainGridPane.getChildren().clear();
         mainGridPane.add(rowOfColumnsPane,2,2);
         stackPane.getChildren().clear();
         stackPane.getChildren().addAll(mainGridPane);
-        Scene scene = new Scene(stackPane, WIDTH*BLOCK_RECTANGLE_SIZE, HEIGHT*BLOCK_RECTANGLE_SIZE);
-        primaryStage.setTitle("CRUSHMEH");
+        int width = rowOfColumns.size();
+        int height = rowOfColumns.getColumnOfBlocks(0).size();
+        Scene scene = new Scene(stackPane, width*BLOCK_RECTANGLE_SIZE+100, height*BLOCK_RECTANGLE_SIZE+30);
+        Button btn1 = new Button();
+        btn1.setText("New Game");
+        stackPane.getChildren().add(btn1);
+
+        btn1.setTranslateX((width*BLOCK_RECTANGLE_SIZE)/2);
+
+
+        primaryStage.setTitle("SquareCrush");
         primaryStage.setScene(scene);
         primaryStage.show();
-    }
+
+        btn1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            public void handle(MouseEvent t) {
 
 
+                TextField boardField = new TextField();
+                TextField difficultyField = new TextField();
 
+                HBox size = new HBox();
+                size.getChildren().addAll(boardField);
+                size.getChildren().addAll(difficultyField);
+                size.setSpacing(10);
+
+
+                final Stage dialog = new Stage();
+                dialog.initModality(Modality.APPLICATION_MODAL);
+                dialog.initOwner(primaryStage);
+                Button anotherbtn = new Button();
+                anotherbtn.setText("New Game");
+                VBox dialogVbox = new VBox(10);
+                dialogVbox.getChildren().add(new Text("  Size         Difficulty"));
+                dialogVbox.getChildren().add(size);
+                dialogVbox.getChildren().add(anotherbtn);
+                Scene dialogScene = new Scene(dialogVbox, 150, 100);
+                dialog.setScene(dialogScene);
+                dialog.show();
+
+                anotherbtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+                    public void handle(MouseEvent event) {
+                        String input = boardField.getText();
+                        String input2 = difficultyField.getText();
+                        try{
+                            int size = Integer.parseInt(input);
+                            int diff = Integer.parseInt(input2);
+                            Event notevent = new Event();
+                            notevent.newGame(primaryStage,size,diff);
+                        }
+                        catch (NumberFormatException nfe){
+                            System.out.println("Give ME A NUMBER!");
+                            System.out.println("NumberFormatException: " + nfe.getMessage());
+                        }
+                    }
+                });
+
+                //Event event = new Event();
+                //event.newGame(primaryStage);
+            }
+    });
+
+}
 
 
 // A RowOfColumns contains ColumnOfBlocks' contains Blocks
@@ -102,6 +158,23 @@ public class View {
         mainGridPane.add(refreshRowOfColumnsPane(rowOfColumns,animated),2,2);
         Event event = new Event();
         animated = event.generalHandler(animated);
+
+        StackPane smthelse = new StackPane();
+        Label score = new Label();
+        //score.setText("LIONS");
+        score.setText(Integer.toString(animated.getScore()));
+        smthelse.getChildren().addAll(score);
+        mainGridPane.add(smthelse,2,4);
+        System.out.println(Integer.toString(animated.getScore()));
+
+        if (animated.isGameOver()) {
+            StackPane smth = new StackPane();
+            Label gameOver = new Label();
+            gameOver.setText("GAME OVER");
+            smth.getChildren().setAll(gameOver);
+            mainGridPane.add(smth,2,3);
+            System.out.println(animated.isGameOver());
+        }
         animateFadeOutBlocks(animated);
 
         //mainGridPane.setTranslateY(-200);
@@ -110,7 +183,7 @@ public class View {
     public GridPane refreshRowOfColumnsPane(RowOfColumns rowOfColumns, Animated animated){
         GridPane rowOfColumnsPane = new GridPane();
 
-        for (int i = 0; i < rowOfColumns.getContainingColumns().size();i++){
+        for (int i = 0; i < rowOfColumns.size();i++){
             ColumnOfBlocks columnOfBlocks = rowOfColumns.getColumnOfBlocks(i);
             GridPane columnOfBlocksPane = refreshColumnOfBlocksPane(columnOfBlocks, animated);
             rowOfColumnsPane.setColumnIndex(columnOfBlocksPane,i);
@@ -122,7 +195,7 @@ public class View {
     private GridPane refreshColumnOfBlocksPane(ColumnOfBlocks columnOfBlocks, Animated animated){
         GridPane columnOfBlocksPane = new GridPane();
 
-        for (int i = 0; i < columnOfBlocks.getContainingBlocks().size();i++){
+        for (int i = 0; i < columnOfBlocks.size();i++){
             Block block = columnOfBlocks.getBlock(i);
             StackPane blockRectangle = refreshBlockRectangle(block,animated);
             columnOfBlocksPane.setRowIndex(blockRectangle,i);
@@ -142,6 +215,7 @@ public class View {
         final Rectangle blockRectangle = new Rectangle();
         blockRectangle.setHeight(BLOCK_RECTANGLE_SIZE);
         blockRectangle.setWidth(BLOCK_RECTANGLE_SIZE);
+        /*
         if (animated.getToPlaceOnTop().contains(block)){
             blockRectangle.setFill(new Color(1,1,1,1));
             blockRectangle.setStroke(Color.WHITE);
@@ -149,8 +223,10 @@ public class View {
         }
         else{
             blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
-        }
 
+        }
+        */
+        blockRectangle.setFill(new ImagePattern(block.getBlockImage().getImage()));
         //blockRectangle.setFill(new Color(1,1,1,1));
 
         StackPane rectanglePane = new StackPane();
@@ -276,8 +352,8 @@ public class View {
 
                     //System.out.println("Fall Down ended");
 
-                    animateFadeInBlocks(finalAnimated);
-                    //refreshMainGrid(finalAnimated);
+                    //animateFadeInBlocks(finalAnimated);
+                    refreshMainGrid(finalAnimated);
 
                     //stackPane.getChildren().clear();
                     //stackPane.getChildren().removeAll();
