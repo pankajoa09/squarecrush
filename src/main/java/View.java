@@ -10,6 +10,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.GaussianBlur;
@@ -28,11 +29,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
-
-
-
-
+import java.util.ArrayList;
 
 
 /**
@@ -100,12 +97,24 @@ public class View {
 
 
                 TextField boardField = new TextField();
-                TextField difficultyField = new TextField();
+
+
+                final ComboBox priorityComboBox = new ComboBox();
+                priorityComboBox.getItems().addAll(
+                        "Hey,not too rough",
+                        "Hurt me plenty",
+                        "Ultra-Violence",
+                        "Nightmare"
+                );
+
+                priorityComboBox.setValue("Difficulty");
 
                 HBox size = new HBox();
                 size.getChildren().addAll(boardField);
-                size.getChildren().addAll(difficultyField);
+
+                size.getChildren().addAll(priorityComboBox);
                 size.setSpacing(10);
+
 
 
                 final Stage dialog = new Stage();
@@ -114,20 +123,21 @@ public class View {
                 Button submitButton = new Button();
                 submitButton.setText("New Game");
                 VBox dialogVbox = new VBox(10);
-                dialogVbox.getChildren().add(new Text("  Size         Difficulty"));
+                dialogVbox.getChildren().add(new Text("  Size"));
                 dialogVbox.getChildren().add(size);
                 dialogVbox.getChildren().add(submitButton);
-                Scene dialogScene = new Scene(dialogVbox, 150, 100);
+
+                Scene dialogScene = new Scene(dialogVbox, 300, 100);
                 dialog.setScene(dialogScene);
                 dialog.show();
 
                 submitButton.setOnMouseClicked(new EventHandler<MouseEvent>() {
                     public void handle(MouseEvent event) {
                         String input = boardField.getText();
-                        String input2 = difficultyField.getText();
+                        String input2 = priorityComboBox.getValue().toString();
                         try{
                             int size = Integer.parseInt(input);
-                            int diff = Integer.parseInt(input2);
+                            int diff = translateDifficulty(input2,size);
                             Event notevent = new Event();
                             notevent.newGame(primaryStage,size,diff);
                         }
@@ -140,8 +150,17 @@ public class View {
 
             }
     });
-
 }
+
+    public int translateDifficulty(String diff,int size){
+        ArrayList<String> difficulty = new ArrayList<>();
+        difficulty.add("Hey,not too rough");difficulty.add( "Hurt me plenty");difficulty.add( "Ultra-Violence");difficulty.add("Nightmare");
+        int truediff = difficulty.indexOf(diff)+1;
+        System.out.println("JSLKDFJLDSF");
+        System.out.println((truediff*truediff)*size);
+        return (truediff*truediff)*size;
+}
+
 
 
 // A RowOfColumns contains ColumnOfBlocks' contains Blocks
